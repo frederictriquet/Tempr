@@ -1,0 +1,49 @@
+---
+- name: Install apache + php5
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - apache2
+    - libapache2-mod-php5
+    - php5-cli
+    - php5-mcrypt
+    - php5-pgsql
+    - php5-curl
+    - php5-intl
+    - php5-redis
+
+#- name: Enable mod-rewrite
+#  apache2_module: state=present name=rewrite
+
+- name: (De)Activate modules
+  apache2_module: state={{ item.state }} name={{ item.name }}
+  with_items:
+    - name: rewrite
+      state: present
+    - name: ssl
+      state: present
+
+#- name: Deactivate alias module
+#  file: name=/etc/apache2/mods-enabled/{{ item }} state=absent
+#  with_items:
+#    - alias.conf
+#    - alias.load
+
+- name: Set Apache Virtual Host
+  template:
+    src=dashboard.conf.j2
+    dest=/etc/apache2/sites-enabled/dashboard.conf  
+
+- name: Delete default enabled site
+  command: removes="/etc/apache2/sites-enabled/000-default.conf" rm /etc/apache2/sites-enabled/000-default.conf 
+
+# TODO REPLACE ME WITH CORRECT LETSENCRYPT CERTS
+- copy:
+    src: ws_server.key
+    dest: /etc/apache2/ws_server.key
+
+- copy:
+    src: ws_server.crt
+    dest: /etc/apache2/ws_server.crt
+
+- name: Restart Apache
+  service: name=apache2 state=restarted

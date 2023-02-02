@@ -1,0 +1,5 @@
+- .gitignore
+- .project
+- .settings
+- application/config/constants.php
+- .rsync-filter

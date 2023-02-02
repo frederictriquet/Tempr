@@ -1,0 +1,8 @@
+RewriteEngine On
+
+#RewriteBase /WS
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+SetEnvIf Authorization "Bearer (.*)" HTTP_AUTHORIZATION=$1

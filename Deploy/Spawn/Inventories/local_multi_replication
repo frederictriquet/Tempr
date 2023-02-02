@@ -1,0 +1,5 @@
+[dbmaster_group]
+db.server.multi
+
+[dbslave_group]
+db2.server.multi

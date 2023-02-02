@@ -1,0 +1,17 @@
+ws_ufw_additional_rules:
+  - port: 443
+    rule: allow
+
+letsencrypt_webroot: /var/www/html/trunk
+
+letsencrypt_domains:
+  - "{{ tempr_wshost_fqdn }}"
+
+letsencrypt_siteconf: "ws.conf"
+
+letsencrypt_certconf: |
+    SSLCertificateFile      /etc/letsencrypt/live/{{ tempr_wshost_fqdn }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ tempr_wshost_fqdn }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ tempr_wshost_fqdn }}/chain.pem
+
+

@@ -1,0 +1,29 @@
+librenms_ufw_additional_rules:
+  - port: 443
+    rule: allow
+  - port: 80
+    rule: allow
+
+librenms_configure_files:
+- d: /etc/snmp/snmpd.conf
+  r: ""
+  l: "rocommunity public 127.0.0.1"
+- d: /etc/php5/apache2/php.ini
+  r: "^;date.timezone"
+  l: "date.timezone = Europe/Paris"
+- d: /etc/php5/cli/php.ini
+  r: "^;date.timezone"
+  l: "date.timezone = Europe/Paris"
+- d: /opt/librenms/config.php
+  r: "USERNAME"
+  l: "$config['db_user'] = 'librenms';"
+- d: /opt/librenms/config.php
+  r: "PASSWORD"
+  l: "$config['db_pass'] = 'Libr3NMS';"
+- d: /opt/librenms/config.php
+  r: "base_url"
+  l: "$config['base_url']        = 'https://{{ tempr_librenmshost_fqdn }}';"
+- d: /opt/librenms/config.php
+  r: "'community'"
+  l: "$config['snmp']['community'] = array('secret');"
+  

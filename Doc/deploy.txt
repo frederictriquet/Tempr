@@ -1,0 +1,20 @@
+spawn.sh
+- Vagrantfile
+- Vagrantfile.preprod
+- dev.yml
+- preprod.yml
+- local_multi.yml
+
+
+install.sh
+- Inventories/*
+- generated_vars/*
+- provisioning.yml
+- deployment.yml
+
+
+Inventories/*
+	compose les groupes
+
+provisioning.yml/deployment.yml
+	affecte les roles aux groupes

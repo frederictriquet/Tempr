@@ -1,0 +1,28 @@
+<VirtualHost *:443>
+    ServerName {{ tempr_wwwhost_fqdn }}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/ME
+    SSLEngine on
+# CERTIFICATES BEGIN
+    SSLCertificateFile      /etc/apache2/me_server.crt
+    SSLCertificateKeyFile /etc/apache2/me_server.key
+# CERTIFICATES END
+
+    # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+    # error, crit, alert, emerg.
+    # It is also possible to configure the loglevel for particular
+    # modules, e.g.
+    #LogLevel info ssl:warn
+
+    ErrorLog ${APACHE_LOG_DIR}/me.error.log
+    CustomLog ${APACHE_LOG_DIR}/me.access.log combined
+
+
+    <Directory "/var/www/html/ME">
+        AllowOverride All
+        Options -Indexes +FollowSymLinks
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>

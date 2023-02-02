@@ -1,0 +1,14 @@
+200 	OK 	Requête traitée avec succès
+201 	Created 	Requête traitée avec succès avec création d’un document
+204 	No Content 	Requête traitée avec succès mais pas d’information à renvoyer
+400 	Bad Request 	La syntaxe de la requête est erronée
+401 	Unauthorized 	Une authentification est nécessaire pour accéder à la ressource
+403 	Forbidden 	Le serveur a compris la requête, mais refuse de l'exécuter.
+404 	Not Found 	Ressource non trouvée
+405 	Method Not Allowed 	Méthode de requête non autorisée
+409 	Conflict 	La requête ne peut être traitée à l’état actuel
+413 	Request Entity Too Large 	Traitement abandonné dû à une requête trop importante
+429 	Too Many Requests 	(RFC 6585) Le client a émis trop de requêtes dans un délai donné
+500 	Internal Server Error 	Erreur interne du serveur
+501 	Not Implemented 	Fonctionnalité réclamée non supportée par le serveur
+503 	Service Unavailable 	Service temporairement indisponible ou en maintenance

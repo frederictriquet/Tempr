@@ -1,0 +1,14 @@
+store_ufw_additional_rules:
+  - port: 6379
+    rule: allow
+    from_ip: "{{ tempr_wshost_ip }}"
+  - port: 6379
+    rule: allow
+    from_ip: "{{ tempr_dashboardhost_ip }}"
+  - port: 6379
+    rule: allow
+    from_ip: "{{ tempr_jobshost_ip }}"
+  - port: 6379
+    rule: allow
+    from_ip: "{{ tempr_mehost_ip }}"
+    

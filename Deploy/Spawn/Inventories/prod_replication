@@ -1,0 +1,9 @@
+
+
+[dbmaster_group]
+db.prod
+
+[dbslave_group]
+db2.prod
+
+

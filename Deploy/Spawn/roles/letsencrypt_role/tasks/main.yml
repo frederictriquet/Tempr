@@ -1,0 +1,33 @@
+---
+- file: dest=/srv/Tempr/LetsEncrypt state=directory
+
+- name: Download Certbot
+  get_url: url=https://dl.eff.org/certbot-auto dest=/srv/Tempr/LetsEncrypt/certbot-auto mode=0700
+
+- debug: msg="/srv/Tempr/LetsEncrypt/certbot-auto certonly --staging --email fred@tempr.co --rsa-key-size 4096 -n --expand --agree-tos --webroot -w {{ letsencrypt_webroot }} {% for domain in letsencrypt_domains %} -d {{ domain }}{% endfor %}"
+
+
+# requires:
+# letsencrypt_webroot
+# letsencrypt_domains
+- name: Run certbot
+  #command: "/srv/Tempr/LetsEncrypt/certbot-auto certonly --staging --email fred@tempr.co --rsa-key-size 4096 -n --expand --agree-tos --webroot -w {{ letsencrypt_webroot }} {% for domain in letsencrypt_domains %} -d {{ domain }}{% endfor %}"
+  command: "/srv/Tempr/LetsEncrypt/certbot-auto certonly --email fred@tempr.co --rsa-key-size 4096 -n --expand --agree-tos --webroot -w {{ letsencrypt_webroot }} {% for domain in letsencrypt_domains %} -d {{ domain }}{% endfor %}"
+
+- name: Update apache virtual host
+  lineinfile:
+    dest="/etc/apache2/sites-enabled/{{ letsencrypt_siteconf }}"
+    regexp="SSLCertificate"
+    state=absent
+
+- name: Update apache virtual host
+  blockinfile:
+    dest: "/etc/apache2/sites-enabled/{{ letsencrypt_siteconf }}"
+    insertafter: "SSLEngine on"
+    marker: "# CERTIFICATES {mark}"
+    content: "{{ letsencrypt_certconf }}"
+
+- name: Reload Apache
+  service: name=apache2 state=reloaded
+
+

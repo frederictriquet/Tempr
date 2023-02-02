@@ -1,0 +1,71 @@
+- name: "Ensure replication is stopped"
+  file: path=/var/lib/postgresql/9.4/main/recovery.conf state=absent
+
+- name: "Configure Slave: ensure postgres is (re)started"
+  service: name=postgresql state=restarted
+
+- name: Replication user
+  become: true
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: replicator
+    encrypted: no
+    password: vierge
+    role_attr_flags: "LOGIN,REPLICATION"
+
+
+- name: Set pg_hba.conf
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    regexp: '{{ item["r"] }}'
+    line: '{{ item["l"] }}'
+    state: present
+  with_items: '{{ dbslave_pg_hba_conf }}'
+
+
+- name: Set postgresql.conf
+  blockinfile:
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+    insertafter: EOF
+    block: |
+      listen_addresses = '*'
+      wal_level = hot_standby
+      archive_mode = on
+      archive_command = 'cd .'
+      max_wal_senders = 3
+      hot_standby = on
+      checkpoint_segments = 8
+      wal_keep_segments = 8
+
+- name: Create pgpass
+  become: true
+  become_user: postgres
+  template:
+    src=pgpass.j2
+    dest=/var/lib/postgresql/.pgpass
+    mode=0600
+
+- name: Stop DB
+  service: name=postgresql state=stopped
+
+- name: Clean data
+  become: true
+  become_user: postgres
+  file: path=/var/lib/postgresql/9.4/main  state=absent
+
+- name: Retrieve master data
+  become: true
+  become_user: postgres
+  command: pg_basebackup -h {{ tempr_dbhost_ip }} -D /var/lib/postgresql/9.4/main -U replicator -v -P
+
+- name: Create recovery.conf
+  template:
+    src=recovery.conf.j2
+    dest=/var/lib/postgresql/9.4/main/recovery.conf
+    owner=postgres
+    group=postgres
+    mode=0600
+
+- name: Start DB
+  service: name=postgresql state=started

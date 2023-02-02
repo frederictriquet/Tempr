@@ -1,0 +1,91 @@
+
+- name: Install lzop pv python daemontools python-dev gcc
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - lzop
+    - pv
+    - python
+    - daemontools
+    - python-dev
+    - gcc
+
+- name: Remove any python-pip Debian package
+  apt: pkg=python-pip state=absent purge=yes
+
+- name: Download get-pip.py
+  get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py mode=0700
+
+- name: Install PIP
+  command: /tmp/get-pip.py
+
+- name: Symlink to pip
+  file: src=/usr/local/bin/pip dest=/usr/bin/pip state=link
+
+- name: Install last versions of wal-e requests six
+  pip: name={{ item }} state=latest
+  with_items:
+    - wal-e
+    - requests
+    - six
+
+- name: Create Wal-E env
+  file: path=/etc/wal-e.d/env state=directory recurse=yes owner=root group=postgres
+
+- name: Set AWS Wal-E params
+  lineinfile:
+    create: yes
+    dest: /etc/wal-e.d/env/{{ item["f"] }}
+    line: '{{ item["l"] }}'
+    regexp: '{{ item["l"] }}'
+    state: present
+    owner: root
+    group: postgres
+  with_items: '{{ dbmaster_aws_conf }}'
+
+- name: Replication user
+  become: true
+  become_user: postgres
+  postgresql_user:
+    state: present
+    name: replicator
+    encrypted: no
+    password: vierge
+    role_attr_flags: "LOGIN,REPLICATION"
+
+
+- name: Set pg_hba.conf
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    regexp: '{{ item["r"] }}'
+    line: '{{ item["l"] }}'
+    state: present
+  with_items: '{{ dbmaster_pg_hba_conf }}'
+
+
+- name: Set postgresql.conf
+  blockinfile:
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+    insertafter: EOF
+    content: |
+      listen_addresses = '*'
+      wal_level = hot_standby
+      archive_mode = on
+      max_wal_senders = 3
+      hot_standby = on
+      checkpoint_segments = 8
+      wal_keep_segments = 8
+
+- name: Stop Wal-E archiving
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+    regexp: "^archive_command"
+    line: "archive_command = 'cd .'"
+    state: present
+
+- name: Restart postgres
+  service: name=postgresql state=restarted
+
+
+
+
+

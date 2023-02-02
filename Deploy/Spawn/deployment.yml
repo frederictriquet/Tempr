@@ -1,0 +1,48 @@
+---
+- hosts: all
+  roles:
+
+#- hosts: gw_group
+#  roles:
+#    - { role: gw_deployment_role, tags: gw }
+
+- hosts: db_group
+  roles:
+    - { role: db_deployment_role, tags: db }
+
+#- hosts: dbmaster_group
+#  roles:
+##    - { role: dbmaster_deployment_role, tags: dbmaster,dbreplication }
+#
+#- hosts: dbslave_group
+#  roles:
+##    - { role: dbslave_deployment_role, tags: dbslave,dbreplication }
+
+- hosts: ws_group
+  roles:
+    - { role: ws_deployment_role, tags: ws }
+
+- hosts: me_group
+  roles:
+    - { role: me_deployment_role, tags: me }
+
+- hosts: elasticsearch_group
+  roles:
+    - { role: elasticsearch_deployment_role, tags: elasticsearch }
+
+- hosts: dashboard_group
+  roles:
+    - { role: dashboard_deployment_role, tags: dashboard }
+    - { role: dbdashboard_deployment_role, tags: dbdashboard }
+
+- hosts: jobs_group
+  roles:
+    - { role: jobs_deployment_role, tags: jobs }
+
+- hosts: store_group
+  roles:
+    - { role: store_deployment_role, tags: store }
+
+- hosts: doc_group
+  roles:
+    - { role: doc_deployment_role, tags: doc }

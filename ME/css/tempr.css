@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'SF-Medium';
+    src: url('../fonts/SF-UI-Display-Medium.otf');
+}
+
+@font-face {
+    font-family: 'SF-Regular';
+    src: url('../fonts/SF-UI-Display-Regular.otf');
+}
+
+.page {
+    margin: 0 auto;
+    background-color: rgb(255,102,102);
+}
+
+body {
+    background-color: rgb(255,102,102);
+}
+    
+@media screen and (max-width: 330px) /* iPhone 5 : OK*/
+{
+    .page {
+	width: 315px;
+	height: 710px;
+    }
+}
+
+@media screen and (min-width: 331px) and (max-width: 385px) /* iPhone 6 : OK */
+{
+    .page {
+	width: 370px;
+	height: 785px;
+    }
+}
+
+@media screen and (min-width: 386px) and (max-width: 440px) /*424 iPhone 6 Plus : OK */
+{
+    .page {
+	width: 409px;
+	height: 850px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1535px) /* iPad / mini : OK */
+{
+    .page {
+	width: 763px;
+	height: 1028px;
+    }
+}
+
+@media screen and (min-width: 1536px) and (max-width: 2047px) /* iPad 2-4 : OK */
+{
+    .page {
+	width: 800px;
+	height: 1200px;
+    }
+
+}
+
+@media screen and (min-width: 2048px) /* iPad pro -> > : OK */
+{
+    .page {
+	width: 2048px;
+	height: 2732px;
+    }
+}
+
+html, body {
+    border: 0;
+    margin: 0;
+}
+
+.nicetextblock {
+    background-color:#f0f0f0;
+    color: grey;
+    margin-left: auto;
+    margin-right: auto;
+	text-align: center;
+    border-radius: 50px;
+    border-color: white;
+    border-style: solid;
+    border-width: 4px;
+    vertical-align: middle;
+    margin: 3%;
+    font-family: 'SF-Medium';
+    font-size: 24px;
+}
+
+.nicetextblock p{
+	margin:20px;
+}

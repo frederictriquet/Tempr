@@ -1,0 +1,26 @@
+https://blog.anayrat.info/2014/12/23/introduction-a-postgres-part1/
+
+Lors de la connexion il crée un autre processus backend qui va traiter la requête. Si votre client a tendance à initier beaucoup d'ouverture et fermeture de connexion il peut être intéressant de mettre en place un mécanisme de maintient de la connexion type pooler.
+
+
+
+https://blog.anayrat.info/2015/01/02/replication-par-transfert-de-journaux-de-transaction-part-2/
+
+-> installation de postgres 9.5 ou 9.6
+-> archivage des WAL
+
+
+
+
+
+
+
+create view view_nb_friends as
+select count(fk_user_id2) as nb_friends
+from friendships
+group by fk_user_id1;
+
+select nb_friends, count(nb_friends) as nb_users
+from view_nb_friends
+group by nb_friends
+order by nb_friends;

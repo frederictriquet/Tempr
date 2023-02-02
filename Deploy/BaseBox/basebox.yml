@@ -1,0 +1,88 @@
+---
+- hosts: basebox
+  become: true
+  tasks:
+    - name: Create /root/.ssh directory
+      file: path=/root/.ssh state=directory
+
+    - name: Set Authorized_keys for root
+      copy:
+        src: authorized_keys
+        dest: /root/.ssh/authorized_keys
+
+    - name: Deactivate ssh password authentication
+      lineinfile:
+        dest=/etc/ssh/sshd_config
+        line="PasswordAuthentication no"
+        regexp="^PasswordAuthentication"
+        state=present
+        insertafter=EOF
+        create=True
+
+    - name: RabbitMQ key
+      apt_key: url=https://www.rabbitmq.com/rabbitmq-signing-key-public.asc state=present
+    
+    - name: RabbitMQ src
+      apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main' state=present
+    # ne pas installer rabbitMQ, parce qu'au déploiement de la vraie box, le hostname va changer
+    # et rabbitMQ n'aime pas ça
+
+    - name: ElasticSearch key
+      apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+    
+    - name: ElasticSearch src
+      apt_repository: repo='deb http://packages.elastic.co/elasticsearch/1.7/debian stable main' state=present
+
+    - name: Update apt
+      apt: update_cache=yes
+    
+    - name: Install packages
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - rsync
+        - ntp
+#        - ufw
+        - apache2
+        - libapache2-mod-php5
+        - php5-cli
+        - php5-mcrypt
+        - php5-pgsql
+        - php5-intl
+        - postgresql
+        - libpq-dev
+        - python-psycopg2
+        - tree
+        - unzip
+        - curl
+        - snmpd
+        - postgis
+        - openjdk-7-jre-headless
+        - elasticsearch
+        - unzip
+        - python-elasticsearch
+        - snmpd
+        - python-pip
+
+    - pip: name=pika
+    - pip: name=requests
+
+#    - name: Set firewall default policy
+#      ufw: state=enabled policy=reject
+
+    - name: Configure SNMPD
+      copy:
+        src: snmpd.conf
+        dest: /etc/snmp/snmpd.conf
+
+#    - name: Allow ssh from private network
+#      ufw: rule=allow port=22
+
+    - name: Restart services
+      service: name={{ item }} state=restarted enabled=yes
+      with_items:
+        - sshd
+        - snmpd
+#        - ufw
+
+    - name: Shrink Disk
+      script: free_disk_space.sh

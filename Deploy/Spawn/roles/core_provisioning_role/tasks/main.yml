@@ -1,0 +1,77 @@
+---
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install rsync + ntp + multitail
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - rsync
+    - ntp
+    - multitail
+
+- name: Build /etc/hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '{{ item["ip"] }} {{ item["hn"] }} #RGR3'
+    line: '{{ item["ip"] }} {{ item["hn"] }} #RGR3'
+    state: present
+  with_items: '{{ hosts }}'
+
+- name: Build /etc/hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "{{ hostvars[inventory_hostname][item] }} {{ item }} #RGR4"
+    line: "{{ hostvars[inventory_hostname][item] }} {{ item }} #RGR4"
+    state: present
+  with_items: '{{ etchosts }}'
+
+#- name: Build /etc/hosts file
+#  lineinfile:
+#    dest: /etc/hosts
+#    regexp: '.*{{ item }}$'
+#    line: '{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}'
+#    state: present
+#  when: hostvars[item].ansible_default_ipv4.address is defined and vagrant|default(False) == False
+#  with_items: groups['brain']
+#
+## For Vagrant, public address is on eth1 interface.
+#- name: Build /etc/hosts file (Vagrant)
+#  lineinfile:
+#    dest: /etc/hosts
+#    regexp: '.*{{ item }}$'
+#    line: '{{ hostvars[item].ansible_eth1.ipv4.address }} {{ item }}'
+#    state: present
+#  when: hostvars[item].ansible_eth1.ipv4.address is defined and vagrant|default(False) == True
+#  with_items: groups['brain']
+
+
+- name: check current timezone
+  shell: cat /etc/timezone
+  register: current_zone
+
+- name: Set timezone variables
+  copy: content='Europe/Paris'
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+        backup=yes
+  when: current_zone.stdout != 'Europe/Paris'
+  notify:
+    - update timezone
+
+
+- name: bashrc file
+  template:
+    src=bashrc.j2
+    dest=/root/.bashrc
+
+- name: Create /root/bin directory
+  file: path=/root/bin state=directory
+
+- name: Copy root scripts
+  copy:
+    src: mtail
+    dest: /root/bin/mtail
+    mode: 0700
+    

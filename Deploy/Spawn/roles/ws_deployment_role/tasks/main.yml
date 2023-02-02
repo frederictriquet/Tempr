@@ -1,0 +1,28 @@
+---
+# see .rsync-filter file
+- name: Install /var/www/html/WS
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/WS
+    dest=/var/www/html/
+
+- name: Copy conf/db.inc.php
+  template:
+    src=db.inc.php.j2
+    dest=/var/www/html/WS/conf/db.inc.php
+
+- name: Copy conf/env.inc.php
+  template:
+    src=env.inc.php.j2
+    dest=/var/www/html/WS/conf/env.inc.php
+
+- name: Copy conf/es.inc.php
+  template:
+    src=es.inc.php.j2
+    dest=/var/www/html/WS/conf/es.inc.php
+
+- name: Copy conf/aws.inc.php
+  template:
+    src=aws.inc.php.j2
+    dest=/var/www/html/WS/conf/aws.inc.php
+    

@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8
+
+TEMPR_DB_HOST = '{{ tempr_dbhost_ip }}'
+TEMPR_DB2_HOST = '{{ tempr_db2host_ip }}'
+TEMPR_DB_NAME = '{{ tempr_dbname }}'
+TEMPR_DB_USER = '{{ tempr_dbuser }}'
+
+TEMPR_DBDASHBOARD_HOST = '{{ tempr_dashboardhost_ip }}'
+TEMPR_DBDASHBOARD_NAME = '{{ tempr_dashboard_dbname }}'
+TEMPR_DBDASHBOARD_USER = '{{ tempr_dashboard_dbuser }}'
+
+TEMPR_ES_HOST = '{{ tempr_elasticsearchhost_ip }}:9200'
+WWW_TEMPR_ME = 'https://{{ tempr_wwwhost_fqdn }}/'
+TEMPR_STORE_HOST = '{{ tempr_storehost_ip }}'
+TEMPR_MQ_HOST = '{{ tempr_jobshost_ip }}'
+
+TEMPR_STORE_EVENTS_AND_PUSH = 0
+TEMPR_STORE_AUTH_DB = 1
+TEMPR_STORE_ANTI_HAMMERING_DB = 2
+TEMPR_STORE_TRENDS_DB = 3
+TEMPR_STORE_CONFIRMPHONE_DB = 4
+TEMPR_STORE_POSTSMS_DB = 5
+
+CERT_FILE = '/srv/Tempr/Jobs/{{ tempr_push_cert_pem }}'
+KEY_FILE = '/srv/Tempr/Jobs/{{ tempr_push_key_pem }}'
+USE_SANDBOX = {{ tempr_push_sandbox }}

@@ -1,0 +1,5 @@
+.vagrant
+generated_vars/*.*
+Vagrantfile.preprod
+secret_vars/
+*.retry

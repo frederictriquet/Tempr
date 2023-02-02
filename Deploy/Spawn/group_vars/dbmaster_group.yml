@@ -1,0 +1,21 @@
+
+dbmaster_ufw_additional_rules:
+  - port: 5432
+    from_ip: "{{ tempr_db2host_ip }}"
+    rule: allow
+
+dbmaster_pg_hba_conf:
+  - r: "^host replication"
+    l: "host replication replicator {{ tempr_db2host_ip }}/32 md5"
+
+dbmaster_aws_conf:
+  - f: "AWS_REGION"
+    l: "{{ tempr_s3region }}"
+  - f: "AWS_ACCESS_KEY_ID"
+    l: "{{ tempr_s3key }}"
+  - f: "AWS_SECRET_ACCESS_KEY"
+    l: "{{ tempr_s3secret }}"
+  - f: "WALE_S3_PREFIX"
+    l: "s3://{{ tempr_s3bucket_db }}/pg"
+
+

@@ -1,0 +1,13 @@
+
+- hosts: dashboard_group
+  roles:
+    - { role: secu_dashboard_role }
+
+- hosts: ws_group
+  roles:
+    - { role: secu_ws_role }
+
+- hosts: librenms_group
+  roles:
+    - { role: secu_librenms_role }
+

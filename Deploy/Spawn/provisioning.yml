@@ -1,0 +1,90 @@
+---
+- hosts: all
+  #vars_files:
+  #  - generated_vars/hosts.yml
+  roles:
+    - { role: core_provisioning_role, tags: core }
+    - { role: sshd_provisioning_role, tags: sshd }
+    - { role: snmpd_provisioning_role, tags: snmpd }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ all_ufw_additional_rules }}", tags: ufw }
+
+- hosts: gw_group
+  roles:
+    - { role: sshd_provisioning_role, tags: gw,sshd }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ gw_ufw_additional_rules }}", tags: ufw }
+
+- hosts: db_group
+  roles:
+    - { role: db_provisioning_role, tags: db }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ db_ufw_additional_rules }}", tags: ufw }
+
+#- hosts: dbmaster_group
+#  roles:
+##    - { role: dbmaster_provisioning_role, tags: dbmaster,dbreplication }
+##    - { role: ufw_provisioning_role, ufw_rules: "{{ dbmaster_ufw_additional_rules }}", tags: ufw,dbmaster,dbreplication }
+#
+#- hosts: dbslave_group
+#  roles:
+##    - { role: db_provisioning_role, tags: dbslave,dbreplication }
+##    - { role: dbslave_provisioning_role, tags: dbslave,dbreplication }
+##    - { role: ufw_provisioning_role, ufw_rules: "{{ dbslave_ufw_additional_rules }}", tags: ufw,dbslave,dbreplication }
+
+
+- hosts: ws_group
+  roles:
+    - { role: ws_provisioning_role, tags: ws }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ ws_ufw_additional_rules }}", tags: ufw }
+
+- hosts: me_group
+  roles:
+    - { role: me_provisioning_role, tags: me }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ me_ufw_additional_rules }}", tags: ufw }
+
+- hosts: elasticsearch_group
+  roles:
+    - { role: elasticsearch_provisioning_role, tags: elasticsearch }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ elasticsearch_ufw_additional_rules }}", tags: ufw }
+
+- hosts: dashboard_group
+  roles:
+    - { role: dashboard_provisioning_role, tags: dashboard }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ dashboard_ufw_additional_rules }}", tags: ufw }
+    - { role: dbdashboard_provisioning_role, tags: dbdashboard }
+
+- hosts: dbdashboard_group
+  roles:
+    - { role: ufw_provisioning_role, ufw_rules: "{{ dbdashboard_ufw_additional_rules }}", tags: ufw,dbdashboard }
+
+- hosts: librenms_group
+  roles:
+    - { role: librenms_provisioning_role, tags: librenms }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ librenms_ufw_additional_rules }}", tags: ufw }
+
+- hosts: jobs_group
+  roles:
+    - { role: jobs_provisioning_role, tags: jobs }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ jobs_ufw_additional_rules }}", tags: ufw }
+
+- hosts: store_group
+  roles:
+    - { role: store_provisioning_role, tags: store }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ store_ufw_additional_rules }}", tags: ufw }
+
+- hosts: doc_group
+  roles:
+    - { role: doc_provisioning_role, tags: doc }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ doc_ufw_additional_rules }}", tags: ufw }
+
+#- hosts: le_group
+#  roles:
+#    - { role: web_trunk_role, tags: letsencrypt }
+#    - role: letsencrypt_role
+#      letsencrypt_webroot_path: /var/www/html/WS
+#      letsencrypt_email: fred@tempr.co
+#      letsencrypt_cert_domains:
+#        #- "{{ tempr_trunkfqdn }}"
+#        - "{{ tempr_wshost_fqdn }}"
+#        #- "{{ tempr_dashboardhost_fqdn }}"
+#      tags:
+#        - letsencrypt
+#    #- le_provisioning_role

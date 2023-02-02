@@ -1,0 +1,15 @@
+
+dbslave_ufw_additional_rules:
+  - port: 5432
+    from_ip: "{{ tempr_dbhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_dashboardhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_jobshost_ip }}"
+    rule: allow
+
+dbslave_pg_hba_conf:
+  - r: "^host replication"
+    l: "host replication replicator {{ tempr_dbhost_ip }}/32 md5"

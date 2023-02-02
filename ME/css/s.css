@@ -1,0 +1,211 @@
+@font-face {
+    font-family: 'SF-Medium';
+    src: url('../fonts/SF-UI-Display-Medium.otf');
+}
+
+@font-face {
+    font-family: 'SF-Regular';
+    src: url('../fonts/SF-UI-Display-Regular.otf');
+}
+
+.page {
+    margin: 0 auto;
+    background-color: rgb(255,102,102);
+}
+
+body {
+    background-color: rgb(255,102,102);
+}
+
+@media screen and (max-width: 330px) /* iPhone 5 : OK*/
+{
+    .page {
+	width: 315px;
+	height: 837px;
+    }
+}
+
+@media screen and (min-width: 331px) and (max-width: 385px) /* iPhone 6 : OK */
+{
+    .page {
+	width: 370px;
+	height: 930px;
+    }
+}
+
+@media screen and (min-width: 386px) and (max-width: 440px) /* iPhone 6 Plus : OK */
+{
+    .page {
+	width: 409px;
+	height: 996px;
+    }
+}
+
+@media all and (orientation: landscape) /* Paysage */
+{
+    .page {
+	width: 563px;
+	height: 1310px;
+    }
+
+    body {
+    background-color: rgb(255,102,102);
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1535px) /* iPad / mini : OK */
+{
+    .page {
+	width: 763px;
+	height: 1050px;
+    }
+}
+
+@media screen and (min-width: 1536px) and (max-width: 2047px) /* iPad 2-4 : OK */
+{
+    .page {
+	width: 800px;
+	height: 1250px;
+    }
+}
+
+@media screen and (min-width: 2048px) /* iPad pro -> > : OK */
+{
+    .page {
+	width: 2048px;
+	height: 2732px;
+    }
+}
+
+html, body {
+    border: 0;
+    margin: 0;
+}
+
+.bandeau {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toi {
+    color: white;
+    font-family: 'SF-Medium';
+    font-size: 34px;
+}
+
+.apres {
+    color: rgb(178,71,71);
+    font-family: 'SF-Medium';
+    font-size: 20px;
+}
+
+.name {
+    color: white;
+    font-family: 'SF-Medium';
+    font-size: 32px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toi, .name, .apres {
+    text-align: center;
+}
+
+.profil {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    border-radius: 50%;
+    border-color: white;
+    border-style: solid;
+    border-width: 4px;
+    vertical-align: middle;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+}
+
+.imgprofil {
+    position: absolute;
+    margin: auto;
+    max-height: 135%;
+    max-width: 135%;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+}
+
+.encart {
+    background-image: url("../../images/EncartTag.png");
+    background-size: 100% 100%;
+    height: 16%;
+    background-repeat: no-repeat;
+    position: relative;
+    padding-top: 10%;
+    min-height: 140px;
+}
+
+.tag {
+    background-color: rgb(247,247,247);
+    box-shadow: 0px 3px 0px rgb(222,222,222);
+    border-radius: 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 2%;
+}
+
+.hastag {
+    color: rgb(84,96,102);
+    font-family: 'SF-Regular';
+    font-size: 18px;
+    position: absolute;
+    margin-left: 4%;
+    padding-top: 1.5%;
+}
+
+.likes {
+    color: rgb(135,138,139);
+    font-family: 'SF-Regular';
+    font-size: 15px;
+    position: absolute;
+    margin-left: 60%;
+    padding-top: 1.5%;
+}
+
+.heart {
+    z-index: 1;
+    margin-left: 88%;
+    padding-top: 0.5%;
+    height: 90%;
+    max-height: 32px;
+}
+
+.imgpost {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rejoins {
+    text-align: center;
+    margin-top: 2%;
+    color: white;
+    font-family: 'SF-Medium';
+    font-size: 28px;
+}
+
+.imgappstore {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 55%;
+}

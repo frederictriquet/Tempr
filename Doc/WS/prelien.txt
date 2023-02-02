@@ -1,0 +1,42 @@
+POST /post/phone/numero_phone
+POST /post/fb/facebook_id
+
+- il existe dans USERS
+  - si c'est déjà un ami Tempr => post normal
+  - si pas ami Tempr => créer un pending_post_waiting_for_friendship
+    pour le user existant + friendship_request
+- il n'existe pas dans USERS
+  - si il n'existe pas dans PENDING_USERS => le créer dans PENDING_USERS
+  - pending_post_waiting_for_user pour un pending_user + friendship_request_pending
+
+
+un user s'inscrit avec facebook
+un user valide son numéro de phone
+
+quand le user est validé :
+- rechercher s'il existe un PENDING_USER correspondant
+  - faire le lien entre ces deux users
+		update pending_posts set to_fk_user_id = %s where to_fk_pending_user_id = %s
+  - transformer les frienship_requests_pending en friendship_request
+  - transformer les pending_post_waiting_for_user en
+    pending_post_waiting_for_friendship
+
+
+quand une frienship_request est acceptée :
+- transformer les pending_post_waiting_for_friendship en post
+
+
+WITH output AS (
+	delete from table1 where id < 1000 AND col2 IS NOT NULL RETURNING mycol99 as col1, col2
+ ) INSERT INTO table2 (col1, col2) SELECT col1, col2 FROM output;"
+
+nouveaux event_types :
+- phone_confirmed
+- fb_connected
+
+
+(5, ('I1', 'I2', 'FR2', 'T', 'PC', 'FA1'))
+(19, ('I1', 'I2', 'T', 'FR2', 'PC', 'FA1'))
+(97, ('I1', 'T', 'I2', 'FR2', 'PC', 'FA1'))
+(125, ('I2', 'I1', 'FR2', 'T', 'PC', 'FA1'))
+(139, ('I2', 'I1', 'T', 'FR2', 'PC', 'FA1'))

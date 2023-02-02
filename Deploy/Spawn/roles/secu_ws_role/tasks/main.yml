@@ -1,0 +1,6 @@
+---
+- name: Remove some code
+  lineinfile:
+    dest: /var/www/html/WS/schemas/noauth.inc.php
+    regexp: "^.*delete\\('/user/:id', 'admin_user_delete'\\)"
+    state: absent

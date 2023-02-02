@@ -1,0 +1,7 @@
+---
+# see .rsync-filter file
+- name: Install /srv/Tempr/ElasticSearch
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/ElasticSearch
+    dest=/srv/Tempr/

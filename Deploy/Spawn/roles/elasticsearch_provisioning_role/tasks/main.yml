@@ -1,0 +1,39 @@
+---
+- name: ElasticSearch key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+
+- name: ElasticSearch src
+  apt_repository: repo='deb http://packages.elastic.co/elasticsearch/1.7/debian stable main' state=present
+  #apt_repository: repo='deb http://packages.elastic.co/elasticsearch/2.x/debian stable main' state=present
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - openjdk-7-jre-headless
+    - elasticsearch
+    - unzip
+
+- file: path=/srv/Tempr state=directory
+
+
+# TODO enable this later if required
+#- name: get installed Elasticsearch plugins list
+#  command: bin/plugin -l chdir=/usr/share/elasticsearch
+#  changed_when: false
+#  register: es_installed_plugins
+
+#- name: install Elasticsearch plugins
+#  command: "bin/plugin -i {{item.longname}} chdir=/usr/share/elasticsearch"
+#  when: "'- {{item.name}}' not in es_installed_plugins.stdout"
+#  with_items:
+#    - { name: 'head', longname: 'mobz/elasticsearch-head' }
+#    - { name: 'HQ', longname: 'royrusso/elasticsearch-HQ' }
+#    - { name: 'bigdesk', longname: 'lukas-vlcek/bigdesk' }
+
+
+- name: Restart and Auto launch ElasticSearch
+  service: name=elasticsearch state=restarted enabled=yes runlevel="95 10"
+

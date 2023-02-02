@@ -1,0 +1,40 @@
+---
+- name: "Configure Master: ensure postgres is started"
+  service: name=postgresql state=started
+
+- name: "Configure Master: add postgresql replication roles"
+  sudo: true
+  sudo_user: postgres
+  postgresql_user:
+    state: present
+    name: "{{ dbmaster_replication_user.name }}"
+    encrypted: no
+    password: "{{ dbmaster_replication_user.pass }}"
+    role_attr_flags: REPLICATION
+
+- name: "Configure Master: stop postgres"
+  service: name=postgresql state=stopped
+
+- name: "Configure Master: pg_hba.conf"
+  lineinfile:
+    dest=/etc/postgresql/9.4/main/pg_hba.conf
+    state=present
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    create=True
+    insertafter=EOF
+  with_items: dbmaster_pg_hba
+
+
+- name: "Configure Master: postgresql.conf"
+  lineinfile:
+    dest=/etc/postgresql/9.4/main/postgresql.conf
+    state=present
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    create=True
+    insertafter=EOF
+  with_items: dbmaster_postgresql_conf
+
+- name: "Configure Master: restart postgres"
+  service: name=postgresql state=started

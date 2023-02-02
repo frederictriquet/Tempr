@@ -1,0 +1,74 @@
+---
+- name: Install apache + php5
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - apache2
+    - libapache2-mod-php5
+    - php5-cli
+    - php5-mcrypt
+    - php5-pgsql
+    - php5-curl
+    - php5-intl
+    - phpqrcode
+    - php5-redis
+
+- name: Create /usr/share/php
+  file: dest=/usr/share/php state=directory
+
+- name: Activate phpqrcode
+  file: src=/usr/share/phpqrcode dest=/usr/share/php/phpqrcode state=link
+
+#- name: Enable mod-rewrite
+#  apache2_module: state=present name=rewrite
+
+- name: (De)Activate modules
+  apache2_module: state={{ item.state }} name={{ item.name }}
+  with_items:
+    - name: rewrite
+      state: present
+    - name: ssl
+      state: present
+
+#- name: Deactivate alias module (
+#  file: name=/etc/apache2/mods-enabled/{{ item }} state=absent
+#  with_items:
+#    - alias.conf
+#    - alias.load
+
+- name: Set Apache Virtual Host
+  template:
+    src=me.conf.j2
+    dest=/etc/apache2/sites-enabled/me.conf  
+
+- name: Set Apache default Virtual Host
+  template:
+    src=redir.conf.j2
+    dest=/etc/apache2/sites-enabled/redir.conf  
+
+- name: Delete default enabled site
+  command: removes="/etc/apache2/sites-enabled/000-default.conf" rm /etc/apache2/sites-enabled/000-default.conf 
+
+# TODO REPLACE ME WITH CORRECT LETSENCRYPT CERTS
+- copy:
+    src: me_server.key
+    dest: /etc/apache2/me_server.key
+
+- copy:
+    src: me_server.crt
+    dest: /etc/apache2/me_server.crt
+
+- name: Create redir
+  file: path=/var/www/html/redir state=directory owner=www-data group=www-data
+
+- name: Copy index
+  template:
+    src=index.php.j2
+    dest=/var/www/html/redir/index.php
+    owner=www-data
+    group=www-data
+
+- name: Ensure index.html is away
+  file: path=/var/www/html/index.html state=absent
+
+- name: Restart Apache
+  service: name=apache2 state=restarted

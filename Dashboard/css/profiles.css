@@ -1,0 +1,40 @@
+#main{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tableaux {
+  display:inline-block;
+  vertical-align:top;
+}
+
+.pagination {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", LucidaGrande, "Lucida Sans", Geneva, Verdana, sans-serif;
+	padding:20px;
+	margin:7px;
+	display: block;
+}
+
+.pagination a {
+	margin: 2px;
+	padding: 0.5em 0.64em 0.43em 0.64em;
+	background-color: #ee4e4e;
+	text-decoration: none; /* no underline */
+	color: #fff;
+}
+.pagination a:hover, .pagination a:active {
+	padding: 0.5em 0.64em 0.43em 0.64em;
+	margin: 2px;
+	background-color: #de1818;
+	color: #fff;
+}
+
+.pagination .current {
+    padding: 0.5em 0.64em 0.43em 0.64em;
+    margin: 2px;
+    background-color: #f6efcc;
+    color: #6d643c;
+}
+.pagination span.disabled {
+    display:none;
+}

@@ -1,0 +1,20 @@
+---
+# en commentaire pour eviter de réclamer des certificats par erreur
+
+#- hosts: me_group
+#  roles:
+#    # pas besoin de web_trunk_role car on a deja le vhost "redir"
+#    # letsencrypt_webroot est configuré dans me_group.yml
+#    - { role: letsencrypt_role, tags: letsencrypt }
+
+#- hosts: ws_group
+#  roles:
+#    - { role: web_trunk_role, tempr_trunkfqdn: "{{ tempr_wshost_fqdn }}" }
+#    - { role: letsencrypt_role, tags: letsencrypt }
+
+
+#- hosts: dashboard_group
+#  roles:
+#    - { role: web_trunk_role, tempr_trunkfqdn: "{{ tempr_dashboardhost_fqdn }}" }
+#    - { role: letsencrypt_role, tags: letsencrypt }
+

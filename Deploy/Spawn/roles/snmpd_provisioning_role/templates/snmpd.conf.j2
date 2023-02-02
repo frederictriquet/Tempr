@@ -1,0 +1,6 @@
+sysLocation    Lille, France
+agentAddress udp:161,udp6:[::1]:161
+view   systemonly  included   .1.3.6.1.2.1.1
+view   systemonly  included   .1.3.6.1.2.1.25.1
+rocommunity secret  127.0.0.1
+rocommunity secret  {{ tempr_localnetwork_ip }}/{{ tempr_private_mask }}

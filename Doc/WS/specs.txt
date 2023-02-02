@@ -1,0 +1,48 @@
+se connecter avec FB
+se connecter avec twitter
+se connecter avec G+
+se connecter avec son numero de mobile
+
+récup contacts FB
+récup contacts twitter
+récup contacts G+
+récup contacts phone
+
+modifier son nom
+modifier sa photo
+
+chercher un contact par son nom
+
+voir le profil public de n'importe qui
+voir le profil complet des gens qui nous ont acceptés en amis
+
+poster un message avec du texte
+poster un message avec du texte et une image
+poster un message avec du texte et une vidéo
+poster un message avec du texte et une URL
+supprimer un post
+
+quand on tape le texte d'un post, ça propose la complétion avec les noms d'amis
+les noms des amis ont une apparence différente
+quand on tape le texte d'un post, ça propose la complétion avec nos hashtags (peut-être les x derniers, ou les x ayant le meilleur score)
+les hashtags ont une apparence différente
+
+gérer les émoticones ?
+
+demander à quelqu'un pour être ami
+accepter une demande d'amitié, ce qui crée un lien d'amitié symétrique
+suivre quelqu'un : on n'est pas amis, mais je vois ses posts publics dans mon flux
+supprimer un lien d'amitié : je ne vois plus du tout ce qu'il poste, il continue de voir mes posts publics
+
+
+les noms des users sont cliquables
+quand on clique sur un nom de user on va sur son profil (public ou privé selon les droits qu'on a)
+
+afficher des miniatures des images postées (dans le flux)
+afficher les images en taille normale quand on clique dessus
+
+afficher des miniatures des vidéos postées
+jouer en fullscreen quand on clique dessus
+
+voter sur les hashtags
+voir les scores de hashtag sur chacun de mes posts

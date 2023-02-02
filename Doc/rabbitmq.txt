@@ -1,0 +1,5 @@
+/etc/rabbitmq/rabbitmq.config
+
+rabbitmqctl eval 'file_handle_cache:info().'
+rabbitmqctl status
+rabbitmqctl list_connections

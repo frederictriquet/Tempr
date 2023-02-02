@@ -1,0 +1,7 @@
+multitail -s 2 /var/log/apache2/ws.access.log \
+    /var/log/apache2/ws.error.log \
+    /var/log/postgresql/postgresql-9.4-main.log \
+    /srv/Tempr/Jobs/eventprocessor.py.log \
+    /srv/Tempr/Jobs/sendpush.py.log \
+    /var/log/redis/redis-server.log \
+    /var/log/rabbitmq/rabbit@ws.log

@@ -1,0 +1,9 @@
+gw_ufw_additional_rules:
+#  - port: 22
+#    rule: allow
+#    from_ip: 82.225.109.107
+  - port: 22
+    rule: allow
+#    from_ip: 172.16.100.1
+  - port: snmp
+    rule: allow

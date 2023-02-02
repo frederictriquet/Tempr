@@ -1,0 +1,24 @@
+---
+# configurer le master pour qu'il gere la replication
+- hosts: dbmaster_group
+  roles:
+    - { role: dbmaster_replication_role, tags: db }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ dbmaster_ufw_additional_rules }}", tags: ufw }
+
+
+
+# configurer le slave
+- hosts: dbslave_group
+  roles:
+    - { role: core_provisioning_role, tags: core }
+    - { role: sshd_provisioning_role, tags: sshd }
+    - { role: snmpd_provisioning_role, tags: snmpd }
+    - { role: db_provisioning_role, tags: db }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ all_ufw_additional_rules }}", tags: ufw }
+    - { role: ufw_provisioning_role, ufw_rules: "{{ dbslave_ufw_additional_rules }}", tags: ufw }
+    - { role: dbslave_replication_role, tags: db }
+
+- hosts: dbmaster_group
+  roles:
+    - { role: dbmaster_wale_role, tags: db }
+

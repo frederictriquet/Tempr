@@ -1,0 +1,13 @@
+---
+# see .rsync-filter file
+- name: Install /var/www/html/DOC
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/Doc/WS/DOC
+    dest=/var/www/html/
+
+- name: Set Host var in swagger.json
+  replace:
+    dest=/var/www/html/DOC/swagger.json
+    regexp='ws.local.tempr.me'
+    replace="{{ tempr_wshost_fqdn }}"

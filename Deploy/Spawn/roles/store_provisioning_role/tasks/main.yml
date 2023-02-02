@@ -1,0 +1,22 @@
+---
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install Redis
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - redis-server
+
+- name: Configure Redis
+  lineinfile:
+    dest=/etc/redis/redis.conf
+    line="bind 127.0.0.1 {{ tempr_storehost_ip }}"
+    regexp="^bind "
+    state=present
+    insertafter=EOF
+    create=True
+
+- name: Restart Redis
+  service: name=redis-server state=restarted
+
+

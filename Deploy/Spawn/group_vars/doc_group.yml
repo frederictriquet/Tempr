@@ -1,0 +1,4 @@
+doc_ufw_additional_rules:
+  - port: 80
+    rule: allow
+

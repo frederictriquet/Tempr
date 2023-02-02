@@ -1,0 +1,86 @@
+---
+- apt_repository: repo='deb http://ftp.fr.debian.org/debian jessie main non-free' state=present
+- apt: update_cache=yes
+
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - apache2
+    - libapache2-mod-php5
+    - mysql-server
+    - mysql-client
+    - python-mysqldb
+    - php5-gd
+    - php5-snmp
+    - php-pear
+    - php5-curl
+    - php5-mysql
+    - snmp
+    - graphviz
+    - php5-mcrypt
+    - php5-json
+    - apache2
+    - fping
+    - imagemagick
+    - whois
+    - mtr-tiny
+    - nmap
+    - snmpd
+    - php-net-ipv4
+    - php-net-ipv6
+    - rrdtool
+    - git
+    - snmp-mibs-downloader
+
+- mysql_db: name=librenms state=present
+
+- mysql_user: name=librenms password='Libr3NMS' priv=librenms.*:GRANT,ALL
+
+- git: repo=https://github.com/librenms/librenms.git dest=/opt/librenms
+
+- shell: cp /opt/librenms/config.php.default /opt/librenms/config.php
+
+- name: fill config
+  lineinfile:
+    dest: "{{ item.d }}"
+    regexp: "{{ item.r }}"
+    line: "{{ item.l }}"
+  with_items: '{{ librenms_configure_files }}'
+
+- service: name=snmpd state=restarted
+
+- user: name=librenms home=/opt/librenms createhome=no system=yes
+
+- user: name=librenms groups=www-data
+
+- file: path=/opt/librenms/rrd state=directory
+
+- file: path=/opt/librenms/logs state=directory
+
+- file: path=/opt/librenms recurse=yes owner=librenms group=librenms
+
+- file: path=/opt/librenms/rrd mode=775
+
+- template: src=librenms.conf.j2 dest=/etc/apache2/sites-enabled/librenms.conf
+
+- apache2_module: state=present name=rewrite
+
+- service: name=apache2 state=restarted
+
+- command: "{{ item }}"
+  args:
+    chdir: /opt/librenms/
+  with_items:
+    - php /opt/librenms/build-base.php
+    - php /opt/librenms/adduser.php tools tools 10 fred@tempr.co
+    - php /opt/librenms/validate.php
+    - php /opt/librenms/addhost.php localhost public v2c
+
+- name: Crontab
+  become: true
+  become_user: root
+  shell: cp /opt/librenms/librenms.nonroot.cron /etc/cron.d/librenms
+  args:
+    creates: /etc/cron.d/librenms
+
+

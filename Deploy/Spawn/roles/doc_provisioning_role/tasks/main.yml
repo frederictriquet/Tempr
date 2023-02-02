@@ -1,0 +1,31 @@
+---
+- name: Install apache
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - apache2
+
+#- name: Enable mod-rewrite
+#  apache2_module: state=present name=rewrite
+
+- name: (De)Activate modules
+  apache2_module: state={{ item.state }} name={{ item.name }}
+  with_items:
+    - name: rewrite
+      state: present
+
+#- name: Deactivate alias module (
+#  file: name=/etc/apache2/mods-enabled/{{ item }} state=absent
+#  with_items:
+#    - alias.conf
+#    - alias.load
+
+- name: Set Apache Virtual Host
+  template:
+    src=doc.conf.j2
+    dest=/etc/apache2/sites-enabled/doc.conf  
+
+- name: Delete default enabled site
+  command: removes="/etc/apache2/sites-enabled/000-default.conf" rm /etc/apache2/sites-enabled/000-default.conf 
+
+- name: Restart Apache
+  service: name=apache2 state=restarted

@@ -1,0 +1,20 @@
+dashboard_ufw_additional_rules:
+  - port: 443
+    rule: allow
+  - port: 80
+    rule: allow
+
+
+letsencrypt_webroot: /var/www/html/trunk
+
+letsencrypt_domains:
+  - "{{ tempr_dashboardhost_fqdn }}"
+
+letsencrypt_siteconf: "dashboard.conf"
+
+letsencrypt_certconf: |
+    SSLCertificateFile      /etc/letsencrypt/live/{{ tempr_dashboardhost_fqdn }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ tempr_dashboardhost_fqdn }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ tempr_dashboardhost_fqdn }}/chain.pem
+
+

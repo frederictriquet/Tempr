@@ -1,0 +1,7 @@
+---
+# Master Playbook
+#- hosts: all
+#  vars_files:
+#    - generated_vars/hosts.yml
+- include: provisioning.yml
+- include: deployment.yml

@@ -1,0 +1,46 @@
+---
+- name: Install PostgreSQL
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - postgresql
+    - libpq-dev # Required for Ansible to interact with postgres
+    - python-psycopg2 # Required for Ansible to interact with postgres
+    - postgis
+    - postgresql-9.4-postgis-2.1
+    - postgresql-9.4-postgis-scripts
+    - python-elasticsearch # TODO REMOVE ME when splitting 
+
+- name: Copy pg_hba.conf
+  template:
+    src=pg_hba.conf.j2
+    dest=/etc/postgresql/9.4/main/pg_hba.conf
+
+- name: Copy pgpass
+  become: true
+  become_user: postgres
+  template:
+    src=pgpass
+    dest=/var/lib/postgresql/.pgpass
+    mode=0600
+
+- name: Allow remote connections
+  lineinfile:
+    dest=/etc/postgresql/9.4/main/postgresql.conf
+    line="listen_addresses = '*'"
+    regexp="^listen_addresses"
+    state=present
+    insertafter=EOF
+    create=True
+
+# FIXME deal with hostnames correctly
+#- name: Authorize connections from other hosts
+#  lineinfile: dest=/etc/postgresql/9.4/main/pg_hba.conf line="host tempr tempr {{ item }} trust"
+#  with_items:
+#    - ws_server
+#    - dashboard_server
+#    - me_server
+#    - wsp_server_new
+
+- name: restart postgresql
+  service: name=postgresql state=restarted
+  

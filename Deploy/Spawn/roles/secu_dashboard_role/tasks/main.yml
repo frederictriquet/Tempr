@@ -1,0 +1,23 @@
+---
+- name: .htpasswd
+  copy:
+    src=htpasswd
+    dest=/var/www/html/Dashboard/.htpasswd
+    owner=www-data
+    group=www-data
+    mode=0600
+
+
+- name: Update .htaccess
+  blockinfile:
+    dest: /var/www/html/Dashboard/.htaccess
+    insertafter: EOF
+    marker: "# auth {mark}"
+    content: |
+      AuthUserFile /var/www/html/Dashboard/.htpasswd
+      #AuthGroupFile /dev/null
+      AuthName "Stop"
+      AuthType Basic
+      <limit GET>
+      require valid-user
+      </limit>

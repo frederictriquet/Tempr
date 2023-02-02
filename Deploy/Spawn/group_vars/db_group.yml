@@ -1,0 +1,22 @@
+db_ufw_additional_rules:
+  - port: 5432
+    from_ip: "{{ tempr_wshost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_wwwhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_elasticsearchhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_jobshost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_dbhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_dashboardhost_ip }}"
+    rule: allow
+  - port: 5432
+    from_ip: "{{ tempr_storehost_ip }}"
+    rule: allow

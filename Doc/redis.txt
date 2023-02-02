@@ -1,0 +1,46 @@
+REDIS
+
+TEMPR_STORE_EVENTS_AND_PUSH = 0
+	r<user_id> = json des recent trends
+	l<user_id> = json des long term trends
+	e<user_id> = date du plus récent event consulté
+	stats_updated<user_id> = None, expire
+	friendship_request<user_id> = None, expire
+	friendship_acceptance<user_id> = None, expire
+	i_am_liked<user_id> = None, expire
+	they_like_it<user_id> = None, expire
+	comment<user_id> = None, expire
+	system<user_id> = None, expire
+	post<user_id> = None, expire
+		voir sendpush.py pour les délais d'expiration
+
+TEMPR_STORE_AUTH_DB = 1
+	<token> = <user_id>
+	<user_id> = <token>  , expire
+	<user_id>:rt = <refresh_token>
+	<refresh_token> = <user_id>
+
+TEMPR_STORE_ANTI_HAMMERING_DB = 2
+	up_<ip> = "<ip> userput", expire 10
+		tentative de création de user depuis la même ip
+	bf_<ip> = "<ip> bf", expire 10
+		tentative de bruteforce de pass depuis la même ip
+	bf_<email> = "<email> bf", expire 10
+		tentative de bruteforce de pass sur un même compte
+	lp_<ip> = "<ip> lostpass", expire 10
+		multiples demandes de reset de pass depuis la même ip
+	lp_<email> = "<email> lostpass", expire 10
+		multiples demandes de reset de pass pour un même compte
+
+TEMPR_STORE_TRENDS_DB = 3
+	r<user_id> = json des recent trends
+	l<user_id> = json des long term trends
+
+TEMPR_STORE_CONFIRMPHONE_DB = 4
+	<minitoken> = json avec phone et user_id, expire 86400*14
+		voir sendsms.py
+
+TEMPR_STORE_POSTSMS_DB = 5
+	<minitoken> = <pending_post_id>, expire 86400*14
+		voir sendsms.py
+

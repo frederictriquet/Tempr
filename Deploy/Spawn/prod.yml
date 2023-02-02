@@ -1,0 +1,56 @@
+---
+servers:
+  - name: gw.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: gw
+    memory: 512
+
+  - name: ws.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: ws
+    memory: 512
+
+  - name: db.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: db
+    memory: 512
+
+  - name: db2.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: db2
+    memory: 512
+
+  - name: me.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: me
+    memory: 512
+
+  - name: dashboard.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: dashboard
+    memory: 512
+
+  - name: es.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: es
+    memory: 512
+
+  - name: jobs.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: jobs
+    memory: 512
+
+  - name: store.prod
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: store
+    memory: 512
+

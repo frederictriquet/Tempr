@@ -1,0 +1,37 @@
+---
+# see .rsync-filter file
+- name: Install /srv/Tempr/Jobs
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/Jobs
+    dest=/srv/Tempr/
+
+- name: Copy lib/conf.py
+  template:
+    src=conf.py.j2
+    dest=/srv/Tempr/Jobs/tempr/conf.py
+
+- name: Crontab for Job scheduler
+  cron: name="Job scheduler" job="/srv/Tempr/Jobs/scheduler.py"
+
+- name: Set Supervisor up with eventprocessor
+  copy:
+    src={{ item }}
+    dest=/etc/supervisor/conf.d/{{ item }}
+  with_items:
+    - eventprocessor.conf
+    - sendmail.conf
+    - sendpush.conf
+    - sendsms.conf
+    - temps.conf
+
+#- name: Restart Supervisor
+#  service: name=supervisor state=restarted
+
+- name: Restart all jobs
+  shell: supervisorctl restart all
+
+- name: Copy logrotate conf file
+  copy:
+    src=jobs
+    dest=/etc/logrotate.d/jobs

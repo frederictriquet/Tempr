@@ -1,0 +1,61 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+env = ENV.has_key?('VM_ENV') ? ENV['VM_ENV'] : "dev"
+
+require 'yaml'
+configuration = YAML.load_file(File.dirname(__FILE__) + "/#{env}.yml")
+servers = configuration['servers']
+
+# set minimal Vagrant version
+Vagrant.require_version ">= 1.5.0"
+
+
+Vagrant.configure("2") do |config|
+  config.ssh.forward_agent = true
+  # see https://twitter.com/mitchellh/status/525704126647128064
+  config.ssh.insert_key = false
+
+#  config.hostmanager.enabled = true
+  config.hostmanager.manage_guest = true
+#  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
+
+  # Multi machine environment
+  servers.each do |server|
+    config.vm.define server['name'] do |machine|
+      machine.vm.hostname = server['hostname'] || nil
+      machine.vm.box = server['box']
+      machine.vm.box_url = server['box_url'] || nil
+      machine.vm.box_version = server['box_version'] || ">= 0"
+
+      if server['ip']
+        print "SERVER IP ", server['ip'], "\n"
+        machine.vm.network "private_network", ip: server['ip']
+      end
+      
+      # Providers specific section
+      machine.vm.provider "virtualbox" do |v|
+        v.gui = false
+        v.cpus = server['cpus'] || 1
+        v.memory = server['memory'] || 1024
+        v.customize ["modifyvm", :id, "--cpuexecutioncap", server['cpuexecutioncap'] || 50]
+        v.customize ["modifyvm", :id, "--cpus", "2"]
+        v.customize ["modifyvm", :id, "--usb", "off"]
+        v.customize ["modifyvm", :id, "--usbehci", "off"]
+      end
+
+      machine.vm.provider :digital_ocean do |provider, override|
+        override.ssh.private_key_path = '~/.ssh/id_rsa'
+        provider.token = 'no token here'
+        provider.image = '15324894'   # debian_sudo_privnet
+        provider.region = 'ams3'
+        provider.size = '512mb'
+        provider.private_networking = true
+      end
+    end
+  end
+
+end

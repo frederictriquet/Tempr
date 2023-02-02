@@ -1,0 +1,28 @@
+- debug: msg="setting ssh up for {{ inventory_hostname }}"
+
+- name: Create /root/.ssh directory
+  file: path=/root/.ssh state=directory
+
+- name: Set Authorized_keys for root
+  copy:
+    src: authorized_keys
+    dest: /root/.ssh/authorized_keys
+
+- name: Deactivate ssh password authentication
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    line="PasswordAuthentication no"
+    regexp="^PasswordAuthentication"
+    state=present
+    insertafter=EOF
+    create=True
+
+    # TODO
+    # change
+    #ListenAddress ::
+    #ListenAddress 0.0.0.0
+    
+    # remove vagrant user at the end
+
+- name: Restart sshd
+  service: name=ssh state=restarted enabled=yes

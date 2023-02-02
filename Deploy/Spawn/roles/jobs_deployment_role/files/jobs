@@ -1,0 +1,11 @@
+compress
+daily
+copytruncate
+
+/srv/Logs/*.error.log {
+    rotate 10
+}
+
+/srv/Logs/*.debug.log {
+    rotate 5
+}

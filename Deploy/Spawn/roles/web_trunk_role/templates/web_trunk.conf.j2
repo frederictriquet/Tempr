@@ -1,0 +1,16 @@
+<VirtualHost *:80>
+    ServerName {{ tempr_trunkfqdn }}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/trunk
+
+    ErrorLog ${APACHE_LOG_DIR}/trunk.error.log
+    CustomLog ${APACHE_LOG_DIR}/trunk.access.log combined
+
+    <Directory "/var/www/html/trunk">
+        AllowOverride All
+        Options -Indexes +FollowSymLinks
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>

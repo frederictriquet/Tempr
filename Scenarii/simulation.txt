@@ -1,0 +1,75 @@
+
+NB_USERS = 1000
+NB_FRIENDSHIPS = 100
+NB_POSTS = 100
+
+FRIENDSHIPS 181166
+POSTS 100000
+FLOWS 33023104
+
+
+
+select count(*) from flows union count(*) from users union select count(*) from posts;
+-- 31952156
+-- 988
+-- 97628
+
+select count(*) from flows where fk_user_id=5;
+delete from flows
+
+
+
+
+select count(*) from users union select count(*) from posts union select count(*) from flows;
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 10000, 150, 200  # GIGANTIC
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 1000, 100, 100  # HUGE
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 500, 20, 50  # BIG
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 50, 20, 50  # SMALL            50   2500    103162
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 5, 2, 10  # TINY
+NB_USERS, NB_FRIENDSHIPS, NB_POSTS = 2, 1, 1  # MICRO
+
+[2015-12-18 17:57:51,452] tiny: 5 users  2 friendships  10 posts
+[2015-12-18 17:57:51,495] simulation time: 24.00s
+[2015-12-18 17:57:51,501] 285 posts_htags   756 htags_likes
+[2015-12-18 17:57:51,635] update user trends time: 0.00s
+[2015-12-18 17:57:51,636] ---------------------------
+[2015-12-18 20:35:10,378] small: 50 users  20 friendships  50 posts
+[2015-12-18 20:35:10,412] simulation time: 9431.00s
+[2015-12-18 20:35:10,456] 7785 posts_htags   207390 htags_likes
+[2015-12-18 20:35:10,904] update user trends time: 0.00s
+[2015-12-18 20:35:10,905] ---------------------------
+[2015-12-19 10:36:39,902] --- STARTING SIMULATIONS --
+[2015-12-19 10:36:39,913] ---------------------------
+[2015-12-19 23:59:30,709] medium: 100 users  30 friendships  30 posts
+[2015-12-19 23:59:30,743] simulation time: 48163.00s
+[2015-12-19 23:59:30,929] 91785 posts_htags   1094315 htags_likes
+[2015-12-19 23:59:39,978] update user trends time: 9.00s
+[2015-12-19 23:59:39,978] ---------------------------
+[2015-12-21 11:02:46,979] simulation time: 126179.00s
+[2015-12-21 11:02:47,541] 166785 posts_htags   1824187 htags_likes
+[2015-12-21 11:02:48,221] update user trends time: 1.00s
+[2015-12-21 11:02:48,221] ---------------------------
+[2015-12-21 11:02:48,221] simulations done
+[2015-12-21 11:04:27,603] --- STARTING SIMULATIONS --
+[2015-12-21 11:04:27,618] ---------------------------
+[2015-12-22 06:32:42,473] medium: 100 users  30 friendships  30 posts
+[2015-12-22 06:32:42,512] simulation time: 70087.00s
+[2015-12-22 06:32:43,217] 175785 posts_htags   2251307 htags_likes
+[2015-12-22 06:33:14,001] update user trends time: 31.00s
+[2015-12-22 06:33:14,001] ---------------------------
+[2015-12-22 06:33:14,001] simulations done
+ count 
+-------
+  1378
+(1 row)
+
+ count 
+-------
+ 58595
+(1 row)
+
+  count  
+---------
+ 4258331
+(1 row)
+

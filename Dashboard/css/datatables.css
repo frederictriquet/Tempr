@@ -1,0 +1,56 @@
+.datatable {
+	
+}
+
+.datatable th {
+	border-bottom: 2px solid #555ba5 !important;	
+	padding:5px 10px !important;	
+	font-weight:normal !important;
+	font-size:18px !important;
+	text-align:left;
+}
+
+.datatable td {
+	vertical-align:middle;
+	padding-top:5px !important;
+}
+
+.datatable .icones a {
+	display:block;
+	float:left;
+	text-decoration:none;	
+	margin-right:10px;
+}
+
+.datatable tr.odd {
+	/*background:#ffe0ac !important;	*/
+}
+
+.datatable tr.even td.sorting_1 {
+    /*background-color: #ffe0ac !important;*/
+}
+
+.datatable tr.odd td.sorting_1 {
+    /*background-color: #ffb8ac !important;*/
+}
+
+.datatable td.icones {
+	font-size:20px;
+}
+
+.datatable .actions-superadmin {
+	width:210px !important;
+}
+
+
+.datatable span.success {
+	color: green;
+}
+
+.datatable span.never {
+	color: orange;
+}
+
+.datatable span.error {
+	color: red;
+}

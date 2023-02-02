@@ -1,0 +1,18 @@
+tempr_dbname: tempr
+tempr_dbuser: tempr
+tempr_dbpass: vierge
+
+tempr_dashboard_dbname: dbdash
+tempr_dashboard_dbuser: dbdash
+tempr_dashboard_dbpass: vierge
+
+all_ufw_additional_rules:
+#  - port: 22
+#    rule: allow
+#    from_ip: 82.225.109.107
+  - port: 22
+    rule: allow
+    from_ip: "{{ tempr_gwhost_ip }}"
+  - port: snmp
+    rule: allow
+    from_ip: "{{ tempr_librenmshost_ip }}"

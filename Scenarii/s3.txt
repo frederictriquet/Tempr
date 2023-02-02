@@ -1,0 +1,15 @@
+Account Number 694970095898
+
+ tempr
+Access Key ID:
+AKIAI4OEOMHOQUPEGCNA
+Secret Access Key:
+MVAD3jgaGPDaR4VzMDktoT5g52v+6kWuVqV88CuH
+
+
+ tempr-upload
+Access Key ID:
+AKIAIHEGOLSZQOJVBGPQ
+Secret Access Key:
+5trWGSPCsuUx+WKGXlYVgA4xGBNA8x7aqfmu8zQo
+

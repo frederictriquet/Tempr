@@ -1,0 +1,45 @@
+img {
+//	image-orientation: from-image;
+}
+
+.table-nonfluid {
+	width: auto !important;
+}
+
+.table > thead > tr > th.mid,
+.table > tbody > tr > th.mid,
+.table > tfoot > tr > th.mid,
+.table > thead > tr > td.mid,
+.table > tbody > tr > td.mid,
+.table > tfoot > tr > td.mid {
+	vertical-align: middle;
+}
+
+th.text-right {
+	text-align: right !important;
+}
+
+
+.datatable tfoot td {
+    border-top: 2px solid #555ba5 !important;    
+}
+
+
+.info_ok {
+  text-decoration: underline;
+  -moz-text-decoration-color: #239723;
+  text-decoration-color: #239723;
+}
+
+.info_ko {
+  text-decoration: underline;
+  -moz-text-decoration-color: #f48;
+  text-decoration-color: #f48;
+}
+
+.floatingblock {
+	width: auto;
+	height: auto;
+	margin: 10px;
+	float: left;
+}

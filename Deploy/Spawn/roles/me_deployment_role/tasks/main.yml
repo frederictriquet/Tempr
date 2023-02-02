@@ -1,0 +1,12 @@
+---
+# see .rsync-filter file
+- name: Install /var/www/html/ME
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/ME
+    dest=/var/www/html/
+
+- name: Copy config/constants.php
+  template:
+    src=constants.php.j2
+    dest=/var/www/html/ME/application/config/constants.php

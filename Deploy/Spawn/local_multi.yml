@@ -1,0 +1,65 @@
+---
+servers:
+  - name: gw.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: gw
+    ip: 172.16.100.250
+    memory: 512
+
+  - name: ws.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: ws
+    ip: 172.16.100.20
+    memory: 512
+
+  - name: db.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: db
+    ip: 172.16.100.30
+    memory: 512
+
+  - name: db2.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: db2
+    ip: 172.16.100.32
+    memory: 512
+
+  - name: me.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: me
+    ip: 172.16.100.40
+    memory: 512
+
+  - name: dashboard.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: dashboard
+    ip: 172.16.100.50
+    memory: 512
+
+  - name: es.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: es
+    ip: 172.16.100.60
+    memory: 512
+
+  - name: jobs.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: jobs
+    ip: 172.16.100.70
+    memory: 512
+
+  - name: store.server.multi
+    #box: "ARTACK/debian-jessie"
+    box: "BaseBox"
+    hostname: store
+    ip: 172.16.100.80
+    memory: 512
+

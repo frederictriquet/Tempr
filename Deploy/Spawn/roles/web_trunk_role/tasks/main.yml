@@ -1,0 +1,9 @@
+- name: Set Apache Virtual Host
+  template:
+    src=web_trunk.conf.j2
+    dest=/etc/apache2/sites-enabled/web_trunk.conf
+
+- file: path=/var/www/html/trunk state=directory owner=www-data group=www-data
+
+- name: Restart Apache
+  service: name=apache2 state=restarted

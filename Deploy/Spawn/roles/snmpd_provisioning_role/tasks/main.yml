@@ -1,0 +1,11 @@
+---
+- name: Install packages
+  apt: pkg=snmpd state=latest
+
+- name: Configure SNMPD
+  template:
+    src: snmpd.conf.j2
+    dest: /etc/snmp/snmpd.conf
+
+- name: Restart services
+  service: name=snmpd state=restarted enabled=yes

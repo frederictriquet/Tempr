@@ -1,0 +1,28 @@
+<VirtualHost *:443>
+    ServerName {{ tempr_dashboardhost_fqdn }}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/Dashboard
+    SSLEngine on
+# CERTIFICATES
+    SSLCertificateFile      /etc/apache2/ws_server.crt
+    SSLCertificateKeyFile /etc/apache2/ws_server.key
+# CERTIFICATES
+
+    # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+    # error, crit, alert, emerg.
+    # It is also possible to configure the loglevel for particular
+    # modules, e.g.
+    #LogLevel info ssl:warn
+
+    ErrorLog ${APACHE_LOG_DIR}/dashboard.error.log
+    CustomLog ${APACHE_LOG_DIR}/dashboard.access.log combined
+
+
+    <Directory "/var/www/html/Dashboard">
+        AllowOverride All
+        Options -Indexes +FollowSymLinks
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>

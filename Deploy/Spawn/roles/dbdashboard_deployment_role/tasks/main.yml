@@ -1,0 +1,20 @@
+---
+# see .rsync-filter file
+- name: Install /srv/Tempr/DBDashboard
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/DBDashboard
+    dest=/srv/Tempr/
+
+- name: Destroy Database (DEV only)
+  become: true
+  become_user: postgres
+  command: /srv/Tempr/DBDashboard/bin/destroy_database.sh
+  #when: tempr_environment == 'development'
+
+- name: Build Database
+  become: true
+  become_user: postgres
+  command: /srv/Tempr/DBDashboard/bin/build_database.sh
+
+

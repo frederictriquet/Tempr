@@ -1,0 +1,83 @@
+--CREATE VIEW view_trends_for_user AS
+--    SELECT
+--        p.to_fk_user_id AS fk_user_id,
+--        ph.fk_htag_id,
+--        SUM(ph.pop) AS total
+--    FROM users u
+--    JOIN posts p ON p.to_fk_user_id = u.pk_user_id
+--    JOIN posts_htags ph ON ph.fk_post_id = p.pk_post_id
+--    GROUP BY p.to_fk_user_id, ph.fk_htag_id
+--    ;
+--
+--CREATE VIEW view_tag_scores AS
+--    SELECT
+--        h.tag,
+--        SUM(ph.pop) AS total
+--    FROM htags h
+--    JOIN posts_htags ph ON ph.fk_htag_id = h.pk_htag_id
+--    GROUP BY h.tag
+--    ;
+
+
+-- TODO postgres 9.5 will implement UPSERT
+--      fix this when upgrading to 9.5
+-- code from http://www.postgresql.org/docs/9.4/static/plpgsql-control-structures.html#PLPGSQL-ERROR-TRAPPING
+CREATE FUNCTION upsert_user_trend(
+    _user_id INT,
+    _htag_id BIGINT,
+    _pop BIGINT
+)
+RETURNS VOID AS
+$$
+BEGIN
+    LOOP
+        -- first try to update the key
+        UPDATE user_trends
+            SET
+                fk_htag_id = _htag_id,
+                pop = _pop
+            WHERE fk_user_id = _user_id;
+        IF found THEN
+            RETURN;
+        END IF;
+        -- not there, so try to insert the key
+        -- if someone else inserts the same key concurrently,
+        -- we could get a unique-key failure
+        BEGIN
+            INSERT INTO user_trends(fk_user_id, fk_htag_id, pop)
+                VALUES (_user_id, _htag_id, _pop);
+            RETURN;
+        EXCEPTION WHEN unique_violation THEN
+            -- Do nothing, and loop to try the UPDATE again.
+        END;
+    END LOOP;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE FUNCTION trend_user_update(_user_id INT)
+RETURNS void
+AS
+$$
+DECLARE
+    r RECORD;
+BEGIN
+    UPDATE users SET lasttrends_ts = NOW()
+        WHERE pk_user_id = _user_id
+        ;
+--            AND lasttrends_ts < NOW() - INTERVAL '1day';
+    IF NOT found THEN RETURN; END IF;
+	
+	FOR r IN
+        SELECT fk_htag_id, total FROM view_trends_for_user
+            WHERE fk_user_id = _user_id
+            ORDER BY total DESC
+            LIMIT 5
+	LOOP
+        PERFORM upsert_user_trend(_user_id, r.fk_htag_id, r.total);
+    END LOOP;
+END 
+$$ LANGUAGE plpgsql;
+
+
+

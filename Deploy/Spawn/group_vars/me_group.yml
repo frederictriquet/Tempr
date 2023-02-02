@@ -1,0 +1,21 @@
+me_ufw_additional_rules:
+  - port: 443
+    rule: allow
+  - port: 80
+    rule: allow
+
+# comme on a un vhost qui répond sur *:80, c'est lui qu'on doit utiliser pour letsencrypt
+letsencrypt_webroot: /var/www/html/redir
+
+letsencrypt_domains:
+  - "{{ tempr_wwwhost_fqdn }}"
+  - "tempr.me"
+
+letsencrypt_siteconf: "me.conf"
+
+letsencrypt_certconf: |
+    SSLCertificateFile      /etc/letsencrypt/live/{{ tempr_wwwhost_fqdn }}/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{{ tempr_wwwhost_fqdn }}/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/{{ tempr_wwwhost_fqdn }}/chain.pem
+
+

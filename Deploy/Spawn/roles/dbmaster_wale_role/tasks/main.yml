@@ -1,0 +1,24 @@
+
+- name: Start Wal-E archiving
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+    regexp: "^archive_command"
+    line: "archive_command = '/usr/bin/envdir /etc/wal-e.d/env /usr/local/bin/wal-e wal-push %p'"
+    state: present
+
+- name: Wal-E crontab
+  become: true
+  become_user: postgres
+  cron:
+    name: "wal-e base backup"
+    hour: 3
+    minute: 14
+    job: "/usr/bin/envdir /etc/wal-e.d/env /usr/local/bin/wal-e backup-push /var/lib/postgresql/9.4/main"
+
+- name: Restart postgres
+  service: name=postgresql state=restarted
+
+
+
+
+

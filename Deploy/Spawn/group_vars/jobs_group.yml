@@ -1,0 +1,8 @@
+jobs_ufw_additional_rules:
+  - port: 5672
+    rule: allow
+    from_ip: "{{ tempr_wshost_ip }}"
+  - port: 5672
+    rule: allow
+    from_ip: "{{ tempr_dashboardhost_ip }}"
+

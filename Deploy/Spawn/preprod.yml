@@ -1,0 +1,7 @@
+---
+servers:
+  - name: wsp_server_new
+    #box: "ARTACK/debian-jessie"
+    box: "digital_ocean"
+    box_url: "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    hostname: ws.preprod.tempr.me

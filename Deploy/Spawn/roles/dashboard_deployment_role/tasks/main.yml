@@ -1,0 +1,13 @@
+---
+# see .rsync-filter file
+- name: Install /var/www/html/Dashboard
+  synchronize:
+    rsync_path="sudo rsync"
+    src=/opt/Tempr/Dashboard
+    dest=/var/www/html/
+
+- name: Copy config/constants.php
+  template:
+    src=constants.php.j2
+    dest=/var/www/html/Dashboard/application/config/constants.php
+

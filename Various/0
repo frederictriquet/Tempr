@@ -1,0 +1,1 @@
+TEMPR_HOST=ws.local.tempr.me terminator --layout continuous --maximise --working-directory=/opt/Tempr/Various/

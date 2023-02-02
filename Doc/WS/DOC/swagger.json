@@ -1,0 +1,2396 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Tempr API",
+    "description": "use with: chromium --disable-web-security",
+    "version": "0.0.1"
+  },
+  "host": "ws.preprod.tempr.me",
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/",
+  "produces": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "token": [
+        "user"
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "token": {
+      "type": "oauth2",
+      "scopes": {
+        "user": "Grants read/write access to profile info only."
+      },
+      "flow": "accessCode",
+      "authorizationUrl": "https://github.com/login/oauth/authorize",
+      "tokenUrl": "https://github.com/login/oauth/access_token"
+    }
+  },
+  "paths": {
+    "/test/": {
+      "get": {
+        "summary": "ping-like request",
+        "description": "Use this to check if the server is up and running, use this too in order to validate the self-issued certificate (\"I am sure of what I am doing, proceed...\"). Copy the request URL into your Chromium location bar",
+        "tags": [
+          "_Sprint1",
+          "noauth",
+          "test"
+        ],
+        "responses": {
+          "200": {
+            "description": "a simple object"
+          }
+        }
+      }
+    },
+    "/noauth/user/": {
+      "put": {
+        "summary": "Add a new user (e-mail / password)",
+        "parameters": [
+          {
+            "name": "userinfo",
+            "in": "body",
+            "description": "user information for registration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_Userinfo"
+            }
+          }
+        ],
+        "tags": [
+          "_Sprint1",
+          "noauth",
+          "user"
+        ],
+        "responses": {
+          "201": {
+            "description": "Creation result",
+            "schema": {
+              "$ref": "#/definitions/OUT_Usercreated"
+            }
+          },
+          "409": {
+            "description": "User not created",
+            "schema": {
+              "$ref": "#/definitions/OUT_Error"
+            }
+          }
+        }
+      }
+    },
+    "/noauth/user/fb/": {
+      "put": {
+        "summary": "Add a new user from Facebook",
+        "description": "Creates a new user, identified by facebook token",
+        "parameters": [
+          {
+            "name": "userinfo",
+            "in": "body",
+            "description": "user information for registration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_UserFBinfo"
+            }
+          }
+        ],
+        "tags": [
+          "_Sprint1",
+          "noauth",
+          "user",
+          "facebook"
+        ],
+        "responses": {
+          "201": {
+            "description": "Creation result",
+            "schema": {
+              "$ref": "#/definitions/OUT_UserFBcreated"
+            }
+          },
+          "409": {
+            "description": "User not created",
+            "schema": {
+              "$ref": "#/definitions/OUT_Error"
+            }
+          }
+        }
+      }
+    },
+    "/noauth/lostpass/{email}": {
+      "get": {
+        "summary": "Initiates a password reset",
+        "description": "An e-mail is sent to the specified address, it contains a URL pointing to a form that the user will use to set his new password.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "description": "complete email address of the user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "an e-mail has been sent"
+          },
+          "404": {
+            "description": "e-mail not found"
+          }
+        },
+        "tags": [
+          "_Sprint1",
+          "noauth",
+          "user",
+          "email"
+        ]
+      }
+    },
+    "/login/": {
+      "post": {
+        "summary": "login/password authentication",
+        "tags": [
+          "_Sprint1",
+          "user"
+        ],
+        "parameters": [
+          {
+            "name": "UserLoginInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_UserLoginInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "login successful",
+            "schema": {
+              "$ref": "#/definitions/OUT_UserLoginOK"
+            }
+          }
+        }
+      }
+    },
+    "/login/fb/": {
+      "post": {
+        "summary": "login/facebook-token authentication",
+        "tags": [
+          "_Sprint1",
+          "user",
+          "facebook"
+        ],
+        "parameters": [
+          {
+            "name": "UserLoginFBInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_UserLoginFBInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "login successful",
+            "schema": {
+              "$ref": "#/definitions/OUT_UserLoginOK"
+            }
+          }
+        }
+      }
+    },
+    "/login/renew/": {
+      "post": {
+        "summary": "Ask for a new access token, pass your refresh_token in the header (Bearer)",
+        "tags": [
+          "_Sprint1",
+          "user"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "renewal successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout/": {
+      "get": {
+        "summary": "logout a user",
+        "tags": [
+          "_Sprint1",
+          "user",
+          "_DEPRECATED"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          }
+        }
+      },
+      "post": {
+        "summary": "logout a user by unregistering his device token",
+        "tags": [
+          "_Sprint4",
+          "user"
+        ],
+        "parameters": [
+          {
+            "name": "iosdevice",
+            "in": "body",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Logout successful"
+          }
+        }
+      }
+    },
+    "/profile/": {
+      "delete": {
+        "summary": "delete self account",
+        "tags": [
+          "_Sprint4",
+          "profile",
+          "user"
+        ],
+        "responses": {
+          "204": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/profile/{userid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user we want the profile",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "summary": "retrieve the profile of a user",
+        "description": "The returned information depends on the privacy and the friendship between the requesting user and the other one. See also GET /profile/",
+        "tags": [
+          "_Sprint1",
+          "_Sprint2",
+          "user",
+          "profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/OUT_UserProfile"
+            }
+          }
+        }
+      }
+    },
+    "/profile/url/": {
+      "get": {
+        "summary": "retrieve the URL to my web profile",
+        "tags": [
+          "_Sprint4",
+          "user",
+          "profile",
+          "share"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/infos/": {
+      "post": {
+        "summary": "Update user information",
+        "tags": [
+          "_Sprint1",
+          "_Sprint2",
+          "profile"
+        ],
+        "parameters": [
+          {
+            "name": "ProfileUpdateInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_ProfileUpdateInfo"
+            }
+          }
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successful"
+          }
+        }
+      }
+    },
+    "/profile/fb/{fbtoken}": {
+      "post": {
+        "summary": "facebook connect on a normal account",
+        "tags": [
+          "_Sprint4",
+          "profile",
+          "facebook"
+        ],
+        "parameters": [
+          {
+            "name": "fbtoken",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "facebook token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/profile/fb/": {
+      "delete": {
+        "summary": "disconnect facebook from on a normal account",
+        "tags": [
+          "_Sprint4",
+          "profile",
+          "facebook"
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "403": {
+            "description": "failure (possibly because it is not a mail/password authenticated account)"
+          }
+        }
+      }
+    },
+    "/profile/{userid}/recenttags/": {
+      "get": {
+        "summary": "retrieve the whole list of the 10 trending tags of the last 15 days",
+        "tags": [
+          "_Sprint3",
+          "profile",
+          "tags"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, an object containing two arrays (tag and likes)"
+          }
+        }
+      }
+    },
+    "/profile/{userid}/alltags/": {
+      "get": {
+        "summary": "retrieve the whole list of the 40 trending tags of the last 52 weeks",
+        "tags": [
+          "_Sprint3",
+          "profile",
+          "tags"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, an object containing two arrays (tag and likes)"
+          }
+        }
+      }
+    },
+    "/profile/confirm/email/": {
+      "get": {
+        "summary": "Confirm e-mail address",
+        "description": "An e-mail is sent to the requesting user, click on the link",
+        "tags": [
+          "_Sprint1",
+          "profile",
+          "email"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/profile/confirm/phone/": {
+      "get": {
+        "summary": "Confirm phone number",
+        "description": "An SMS containing a 4-digits pin-code is sent to the requesting user, POST it to /profile/confirm/phone/<pin-code>",
+        "tags": [
+          "_Sprint1",
+          "profile"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/profile/confirm/phone/{pinCode}": {
+      "parameters": [
+        {
+          "name": "pinCode",
+          "in": "path",
+          "description": "4-digits number",
+          "type": "integer",
+          "required": true
+        }
+      ],
+      "post": {
+        "summary": "Confirm phone number with pin-code",
+        "description": "Send the pin-code previously obtained in the SMS",
+        "tags": [
+          "_Sprint1",
+          "profile"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/profile/{category}/{imageType}": {
+      "parameters": [
+        {
+          "name": "category",
+          "in": "path",
+          "description": "profile, background",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "imageType",
+          "in": "path",
+          "description": "gif, jpeg, png",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "post": {
+        "summary": "this asks for an S3 upload URL to PUT a profile|background picture",
+        "tags": [
+          "_Sprint1",
+          "profile"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/OUT_PendingUploadInfo"
+            }
+          }
+        }
+      }
+    },
+    "/pending/{confirmToken}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "confirmToken",
+          "description": "confirmation token returned by previous media creation request (post creation, profile update)",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "post": {
+        "summary": "Confirm the upload has completed successfully",
+        "tags": [
+          "_Sprint1",
+          "profile",
+          "post",
+          "media"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Abort the profile picture upload",
+        "tags": [
+          "_Sprint1",
+          "profile",
+          "post",
+          "media"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/search/email/{email}": {
+      "get": {
+        "summary": "search a user by his e-mail address, must be url-encoded",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "description": "complete email address to look for",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "_Sprint1",
+          "search",
+          "user",
+          "email"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/phone/{phonenumber}": {
+      "get": {
+        "summary": "search a user by his phone number, must be url-encoded",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "phonenumber",
+            "description": "phone number to look for",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "_Sprint1",
+          "search",
+          "user"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/phones/": {
+      "post": {
+        "summary": "search user by their phone numbers",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "array of phone numbers to look for",
+            "required": true,
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "tags": [
+          "_Sprint1",
+          "search",
+          "user"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/fb/": {
+      "post": {
+        "summary": "search user by their facebook id",
+        "parameters": [
+          {
+            "in": "body",
+            "description": "array of facebook ids to look for",
+            "required": true,
+            "type": "array",
+            "items": "string"
+          }
+        ],
+        "tags": [
+          "_Sprint4",
+          "search",
+          "user",
+          "facebook"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friendship/": {
+      "get": {
+        "summary": "retrieve a list of pending friendship requests",
+        "tags": [
+          "_Sprint1",
+          "friendship"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "result",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_FriendshipRequests"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/friendship/{userid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user we want to be friend with",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "post": {
+        "summary": "ask for a friendship request, confirm if the other user has already asked us",
+        "tags": [
+          "_Sprint1",
+          "friendship"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      },
+      "delete": {
+        "summary": "cancel a pending friendship requests",
+        "tags": [
+          "_Sprint1",
+          "friendship"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/friendship/refuse/{userid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user who wanted to be our friend",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "post": {
+        "summary": "refuse the friendship request coming from userid",
+        "tags": [
+          "_Sprint4",
+          "friendship"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/friend/{userid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "delete": {
+        "summary": "remove the friendship with the specified user",
+        "tags": [
+          "_Sprint4",
+          "user",
+          "friendship"
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/post/": {
+      "post": {
+        "summary": "post a new temp",
+        "parameters": [
+          {
+            "name": "PostPostInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_PostPostInfo"
+            }
+          }
+        ],
+        "tags": [
+          "_Sprint2",
+          "post"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the response is either an empty json (if you asked for a simple post without media) or it can be a OUT_PendingUploadInfo (if you asked for a post with media)",
+            "schema": {
+              "$ref": "#/definitions/OUT_PendingUploadInfo"
+            }
+          }
+        }
+      }
+    },
+    "/post/phone/": {
+      "post": {
+        "summary": "post a new temp to a friend using his phone number",
+        "parameters": [
+          {
+            "name": "PostPostInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_PostPostInfoPhone"
+            }
+          }
+        ],
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the response is either an empty json (if you asked for a simple post without media) or it can be a OUT_PendingUploadInfo (if you asked for a post with media)",
+            "schema": {
+              "$ref": "#/definitions/OUT_PendingUploadInfo"
+            }
+          }
+        }
+      }
+    },
+    "/post/fb/": {
+      "post": {
+        "summary": "post a new temp to a friend using his facebook ID",
+        "parameters": [
+          {
+            "name": "PostPostInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_PostPostInfoFB"
+            }
+          }
+        ],
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "security": [
+          {
+            "token": [
+              "user"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the response is either an empty json (if you asked for a simple post without media) or it can be a OUT_PendingUploadInfo (if you asked for a post with media)",
+            "schema": {
+              "$ref": "#/definitions/OUT_PendingUploadInfo"
+            }
+          }
+        }
+      }
+    },
+    "/post/{postid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "postid",
+          "description": "id of the temp",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "summary": "retieve one temp",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array of zero or one temp, depending on the friendships and the privacy settings. You get the same kind of data when you GET /flow/ but it can not contain more than one temp."
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete a temp",
+        "tags": [
+          "_Sprint3",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/post/{postid}/url/": {
+      "get": {
+        "summary": "retrieve the URL to a post",
+        "tags": [
+          "_Sprint4",
+          "post",
+          "share"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "failure (possibly because the profile is private, or the user does not own the post)"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/{tagid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "in": "path",
+          "name": "tagid",
+          "description": "id of the tag",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have the given tag",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array temps, depending on the friendships and the privacy settings. You get the same kind of data when you GET /flow/"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/{tagid}/down/{timestamp}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "in": "path",
+          "name": "tagid",
+          "description": "id of the tag",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "timestamp",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "creation_ts"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have the given tag, before timestamp",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array temps, depending on the friendships and the privacy settings. You get the same kind of data when you GET /flow/"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/{tagid}/up/{timestamp}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "in": "path",
+          "name": "tagid",
+          "description": "id of the tag",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "timestamp",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "creation_ts"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have the given tag, after timestamp",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array temps, depending on the friendships and the privacy settings. You get the same kind of data when you GET /flow/"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/media/": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have embedded media",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array of post_id, picture url and creation_ts"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/media/down/{timestamp}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "timestamp",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "creation_ts"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have embedded media, before timestamp",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array of post_id, picture url and creation_ts"
+          }
+        }
+      }
+    },
+    "/posts/{userid}/media/up/{timestamp}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "timestamp",
+          "in": "path",
+          "required": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "creation_ts"
+        }
+      ],
+      "get": {
+        "summary": "retieve temps for one user, that have embedded media, after timestamp",
+        "tags": [
+          "_Sprint4",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, the result is an array of post_id, picture url and creation_ts"
+          }
+        }
+      }
+    },
+    "/cities/{latitude}/{longitude}": {
+      "get": {
+        "summary": "get a list of the nearest cities (20km max)",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "longitude",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": [
+          "_Sprint3",
+          "search"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_Cities"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/event/{event_id}": {
+      "delete": {
+        "summary": "delete an event",
+        "tags": [
+          "_Sprint4",
+          "events"
+        ],
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/events/": {
+      "get": {
+        "summary": "get the user's 5 most recent events",
+        "tags": [
+          "_Sprint4",
+          "events"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_Events"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/down/{timestamp}": {
+      "get": {
+        "summary": "get the user's 5 most recent events starting from 'timestamp'",
+        "description": "you first get the 5 most recent events with GET /events/ then you request 5 more events using the 'creation_ts' of the last event, and so on",
+        "parameters": [
+          {
+            "name": "timestamp",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "tags": [
+          "_Sprint4",
+          "events"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_Events"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events/up/{timestamp}": {
+      "get": {
+        "summary": "get newer events than 'timestamp' (5 at most)",
+        "description": "you first get the 5 most recent events with GET /events/ then you can check if new events have occured using the 'creation_ts' of the FIRST event you got",
+        "parameters": [
+          {
+            "name": "timestamp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "creation_ts"
+          }
+        ],
+        "tags": [
+          "_Sprint4",
+          "events"
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_Events"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flow/": {
+      "get": {
+        "summary": "get the user's 5 most recent posts",
+        "description": "these posts may be created by the user for anyone, or by a friend for myself, or by anyone for one of my friends. You first get the 5 most recent posts then you request 5 more and so on",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, returns an object with \"posts\" and \"likes\""
+          }
+        }
+      }
+    },
+    "/flow/{offset}": {
+      "get": {
+        "summary": "DEPRECATED, use GET /flow/down/{timestamp} or GET /flow/up/{timestamp} instead",
+        "description": "DEPRECATED these posts may be created by the user for anyone, or by a friend for myself, or by anyone for one of my friends. You first get the 5 most recent posts then you request 5 more and so on",
+        "deprecated": true,
+        "tags": [
+          "_DEPRECATED",
+          "_Sprint3",
+          "flow",
+          "post"
+        ],
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OUT_Posts"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flow/down/{before_ts}": {
+      "get": {
+        "summary": "retrieve post from the user's flow, down the flow, starting from \"timestamp\" (creation_ts)",
+        "description": "these posts may be created by the user for anyone, or by a friend for myself, or by anyone for one of my friends. You first get the 5 most recent posts then you request 5 more using the value \"creation_ts\" of the last post you received and so on",
+        "tags": [
+          "_Sprint4",
+          "flow",
+          "post"
+        ],
+        "parameters": [
+          {
+            "name": "before_ts",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "creation_ts"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, returns an object with \"posts\" and \"likes\""
+          }
+        }
+      }
+    },
+    "/flow/up/{after_ts}": {
+      "get": {
+        "summary": "retrieve post from the user's flow, up the flow, starting from \"timestamp\" (creation_ts)",
+        "description": "these posts may be created by the user for anyone, or by a friend for myself, or by anyone for one of my friends. If you want to check if there are new posts in the flow, use the value \"creation_ts\" of the most recent post you have. You will use this when the user wants to refresh the top of his flow.",
+        "tags": [
+          "_Sprint4",
+          "flow",
+          "post"
+        ],
+        "parameters": [
+          {
+            "name": "after_ts",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "creation_ts"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, returns an object with \"posts\" and \"likes\""
+          }
+        }
+      }
+    },
+    "/like/{post_id}/{tag_num}": {
+      "post": {
+        "summary": "like one tag in a post",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "tags",
+          "like"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          },
+          {
+            "name": "tag_num",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "position of the tag in the post (1, 2 or 3)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/unlike/{post_id}/{tag_num}": {
+      "post": {
+        "summary": "unlike one tag in a post",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "tags",
+          "like"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          },
+          {
+            "name": "tag_num",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "position of the tag in the post (1, 2 or 3)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/comment/{post_id}": {
+      "post": {
+        "summary": "make a comment on a temp",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "comments"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          },
+          {
+            "name": "PostCommentInfo",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IN_PostCommentInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/comments/{post_id}": {
+      "get": {
+        "summary": "get the 10 first (oldest) comments on a post",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "comments"
+        ],
+        "description": "You first get the 10 oldest comments then you request 10 more and so on by using the \"creation_ts\" of the last comment you received",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, an array of comments, sorted by creation_ts"
+          }
+        }
+      }
+    },
+    "/comments/{post_id}/{timestamp}": {
+      "get": {
+        "summary": "get 10 comments on a post, starting from \"timestamp\" (creation_ts)",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "comments"
+        ],
+        "description": "You get 10 more comments, using the value \"creation_ts\" of the last comment you received",
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          },
+          {
+            "name": "timestamp",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "creation_ts"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success, an array of comments, sorted by creation_ts"
+          }
+        }
+      }
+    },
+    "/comment/{comment_id}": {
+      "delete": {
+        "summary": "delete a comment",
+        "tags": [
+          "_Sprint3",
+          "flow",
+          "post",
+          "comments"
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/report/post/{post_id}": {
+      "post": {
+        "summary": "report a post",
+        "tags": [
+          "_Sprint4",
+          "report",
+          "post"
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/report/comment/{comment_id}": {
+      "post": {
+        "summary": "report a comment",
+        "tags": [
+          "_Sprint4",
+          "report",
+          "post"
+        ],
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/tags/{userid}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "userid",
+          "description": "id of the user we are sending a post to",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "get": {
+        "summary": "retrieve a list of suggested hashtags",
+        "description": "The returned information depends on the privacy and the friendship between the requesting user and the other one. See also GET /profile/",
+        "tags": [
+          "_Sprint4",
+          "user",
+          "tags"
+        ],
+        "responses": {
+          "200": {
+            "description": "success, an array strings"
+          }
+        }
+      }
+    },
+    "/friends/{user_id}/{offset}": {
+      "post": {
+        "summary": "retrieve 10 friends",
+        "tags": [
+          "friendship"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "primary key"
+          },
+          {
+            "name": "offset",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "offset in the list of friends"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      }
+    },
+    "/hello/": {
+      "post": {
+        "summary": "call this ONCE at startup",
+        "description": "this is used to track the beginning of the user's activity",
+        "tags": [
+          "_Sprint4",
+          "user"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "IN_Userinfo": {
+      "description": "User info for registration",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "e-mail address, must be unique"
+        },
+        "firstname": {
+          "type": "string",
+          "description": "user's firstname"
+        },
+        "lastname": {
+          "type": "string",
+          "description": "user's lastname"
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "description": "user's password"
+        }
+      },
+      "required": [
+        "email",
+        "firstname",
+        "lastname",
+        "password"
+      ]
+    },
+    "OUT_Usercreated": {
+      "description": "The result of a user creation",
+      "properties": {
+        "created": {
+          "type": "boolean"
+        },
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "login": {
+          "type": "string"
+        }
+      }
+    },
+    "IN_UserFBinfo": {
+      "description": "Facebook user info for registration",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "Facebook token"
+        }
+      },
+      "required": [
+        "token"
+      ]
+    },
+    "OUT_UserFBcreated": {
+      "description": "The result of a user creation",
+      "properties": {
+        "created": {
+          "type": "boolean"
+        },
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "login": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "facebook_id": {
+          "type": "string"
+        }
+      }
+    },
+    "IN_UserLoginInfo": {
+      "description": "Login/password information",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "E-mail address"
+        },
+        "password": {
+          "type": "string",
+          "description": "User password"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "IN_UserLoginFBInfo": {
+      "description": "Login/FacebookToken information",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "Facebook token"
+        }
+      },
+      "required": [
+        "token"
+      ]
+    },
+    "OUT_UserLoginOK": {
+      "description": "The result of a login (using either e-mail/password or facebook_token)",
+      "properties": {
+        "logged_in": {
+          "type": "boolean"
+        },
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "token": {
+          "type": "string"
+        },
+        "refresh_token": {
+          "type": "string"
+        }
+      }
+    },
+    "IN_ProfileUpdateInfo": {
+      "description": "Data passed to update the profile",
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "private, firstname, lastname, birthdate, city, email, phone, language, iosdevice, pn_postaboutyou, pn_friendshiprequest, pn_frienshipacceptance, pn_profileupdated, pn_comment, pn_like"
+        },
+        "value": {
+          "type": "string",
+          "description": "the new value for the given field (for 'private', the value is a boolean), the language is fr or en, the pn_* are booleans used to configure Push-Notifications"
+        }
+      },
+      "required": [
+        "field",
+        "value"
+      ]
+    },
+    "OUT_Error": {
+      "description": "Generic error result",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "line": {
+          "type": "integer"
+        }
+      }
+    },
+    "OUT_PendingUploadInfo": {
+      "properties": {
+        "uploadUrl": {
+          "type": "string",
+          "description": "Use this URL with PUT request to upload the picture"
+        },
+        "confirmToken": {
+          "type": "string",
+          "description": "Use this token:\n- after a successful upload ( POST /pending/{confirmToken} )\n- after a failed upload ( DELETE /pending/{confirmToken} )\n"
+        },
+        "uploadUrlVid": {
+          "type": "string",
+          "description": "Use this URL with PUT request to upload the video"
+        },
+        "confirmTokenVid": {
+          "type": "string",
+          "description": "same as confirmToken"
+        }
+      }
+    },
+    "OUT_User": {
+      "properties": {
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "login": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "url_profile": {
+          "type": "string"
+        }
+      }
+    },
+    "OUT_UserProfile": {
+      "properties": {
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "login": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "url_profile": {
+          "type": "string"
+        },
+        "url_background": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "private": {
+          "type": "boolean"
+        },
+        "email": {
+          "type": "string"
+        },
+        "facebook_id": {
+          "type": "string"
+        },
+        "nbfriends": {
+          "type": "integer"
+        },
+        "is_full": {
+          "type": "boolean"
+        },
+        "likes": {
+          "type": "integer"
+        }
+      }
+    },
+    "ProfileMediaList": {
+      "properties": {
+        "url": {
+          "type": "array",
+          "items": "string"
+        },
+        "post_id": {
+          "type": "array",
+          "items": "integer"
+        }
+      }
+    },
+    "Trends": {
+      "properties": {
+        "tag": {
+          "type": "array",
+          "items": "string"
+        },
+        "likes": {
+          "type": "array",
+          "items": "integer"
+        }
+      }
+    },
+    "Friend": {
+      "properties": {
+        "is_full": {
+          "type": "boolean",
+          "description": "always false"
+        },
+        "pk_user_id": {
+          "type": "integer"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "filename_profile": {
+          "type": "string"
+        },
+        "url_profile": {
+          "type": "string",
+          "description": "url of the picture, there only if filename_profile is not null"
+        }
+      }
+    },
+    "OUT_FriendshipRequests": {
+      "type": "object",
+      "properties": {
+        "fk_user_id1": {
+          "type": "integer"
+        },
+        "fk_user_id2": {
+          "type": "integer"
+        },
+        "request_ts": {
+          "type": "string"
+        }
+      }
+    },
+    "IN_PostPostInfo": {
+      "description": "Data posted to create a new Temp. The temp may have both a body and a media, but it must have at least one of them.",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "optional, text content of the temp"
+        },
+        "to_user_id": {
+          "type": "integer",
+          "description": "user id of the recipient"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "array of 1, 2 or 3 tags associated with the temp, without the '#' symbol, without spaces"
+        },
+        "media": {
+          "type": "string",
+          "description": "optional, MIME-TYPE of the attached media image/gif, image/jpeg, image/png, video/mpeg, video/mp4, video/webm"
+        },
+        "locality": {
+          "type": "string",
+          "description": "optional, locality (from iOS service), must come with countryCode"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "optional, 2 letters (from iOS service), must come with locality"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if longitude is specified"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if latitude is specified"
+        }
+      },
+      "required": [
+        "to_user_id",
+        "tags"
+      ]
+    },
+    "IN_PostPostInfoPhone": {
+      "description": "Data posted to create a new Temp to a phone number. The temp may have both a body and a media, but it must have at least one of them.",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "optional, text content of the temp"
+        },
+        "phone": {
+          "type": "string",
+          "description": "phone number of the recepient"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "array of 1, 2 or 3 tags associated with the temp, without the '#' symbol, without spaces"
+        },
+        "media": {
+          "type": "string",
+          "description": "optional, MIME-TYPE of the attached media image/gif, image/jpeg, image/png, video/mpeg, video/mp4, video/webm"
+        },
+        "locality": {
+          "type": "string",
+          "description": "optional, locality (from iOS service), must come with countryCode"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "optional, 2 letters (from iOS service), must come with locality"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if longitude is specified"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if latitude is specified"
+        }
+      },
+      "required": [
+        "phone",
+        "tags"
+      ]
+    },
+    "IN_PostPostInfoFB": {
+      "description": "Data posted to create a new Temp to a Facebook friend. The temp may have both a body and a media, but it must have at least one of them.",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "optional, text content of the temp"
+        },
+        "fb": {
+          "type": "string",
+          "description": "facebook token of the recipient"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "array of 1, 2 or 3 tags associated with the temp, without the '#' symbol, without spaces"
+        },
+        "media": {
+          "type": "string",
+          "description": "optional, MIME-TYPE of the attached media image/gif, image/jpeg, image/png, video/mpeg, video/mp4, video/webm"
+        },
+        "locality": {
+          "type": "string",
+          "description": "optional, locality (from iOS service), must come with countryCode"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "optional, 2 letters (from iOS service), must come with locality"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if longitude is specified"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double",
+          "description": "optional, but required if latitude is specified"
+        }
+      },
+      "required": [
+        "fb",
+        "tags"
+      ]
+    },
+    "OUT_Cities": {
+      "description": "A city",
+      "properties": {
+        "pk_city_id": {
+          "type": "integer",
+          "description": "the primary key"
+        },
+        "country": {
+          "type": "string",
+          "description": "2 characters identifying the country"
+        },
+        "name": {
+          "type": "string",
+          "description": "the name of the city"
+        },
+        "km": {
+          "type": "number",
+          "format": "double",
+          "description": "the distance between the point of search and the city centrum"
+        }
+      },
+      "required": [
+        "pk_city_id",
+        "country",
+        "name",
+        "km"
+      ]
+    },
+    "OUT_Events": {
+      "description": "An event",
+      "properties": {
+        "pk_event_id": {
+          "type": "integer",
+          "description": "primary key"
+        },
+        "creation_ts": {
+          "type": "string",
+          "description": "timestamp of the event"
+        },
+        "from_fk_user_id": {
+          "type": "integer",
+          "description": "id of the user who caused the event"
+        },
+        "type": {
+          "type": "string",
+          "description": "friendship_request, friendship_acceptance, temp"
+        },
+        "fk_post_id": {
+          "type": "integer",
+          "description": "id of the temp (if type is \"temp\", otherwise empty)"
+        }
+      },
+      "required": [
+        "pk_event_id",
+        "creation_ts",
+        "from_fk_user_id",
+        "type",
+        "fk_post_id"
+      ]
+    },
+    "OUT_Posts": {
+      "description": "A Temp",
+      "properties": {
+        "pk_post_id": {
+          "type": "integer",
+          "description": "primary key"
+        },
+        "creation_ts": {
+          "type": "string",
+          "description": "timestamp of the Temp"
+        },
+        "from_fk_user_id": {
+          "type": "integer",
+          "description": "id of the author"
+        },
+        "to_fk_user_id": {
+          "type": "integer",
+          "description": "id of the recipient"
+        },
+        "body": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "tag1": {
+          "type": "string"
+        },
+        "pop1": {
+          "type": "integer"
+        },
+        "id1": {
+          "type": "integer"
+        },
+        "tag2": {
+          "type": "string"
+        },
+        "pop2": {
+          "type": "integer"
+        },
+        "id2": {
+          "type": "integer"
+        },
+        "tag3": {
+          "type": "string"
+        },
+        "pop3": {
+          "type": "integer"
+        },
+        "id3": {
+          "type": "integer"
+        }
+      }
+    },
+    "IN_PostCommentInfo": {
+      "description": "Data posted to create a new comment on a Temp.",
+      "properties": {
+        "body": {
+          "type": "string",
+          "description": "mandatory, text content of the comment"
+        }
+      },
+      "required": [
+        "body"
+      ]
+    }
+  }
+}
